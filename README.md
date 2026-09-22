@@ -3,6 +3,7 @@
 A LangGraph agent that answers outdoor-safety questions ("is it safe to cycle in Bhopal today?") by combining **live Open-Meteo data** with a **library of 32 written policies (SOPs)**.
 
 The model composes language. It does not decide facts, and it does not decide which policy applies.
+Also added Future Development of this project using the Multi agent in a document if any suggestions are welcome :)
 
 ---
 
