@@ -24,6 +24,11 @@ from pathlib import Path
 
 import streamlit as st
 
+# st.dialog was added in Streamlit 1.39. Cloud may run older versions, so
+# detect and skip the gate if unavailable -- the advisory is still functional,
+# just without the explicit terms upfront.
+HAS_DIALOG = hasattr(st, "dialog") and callable(st.dialog)
+
 st.set_page_config(
     page_title="Weather Advisory Bot",
     page_icon="⛅",
@@ -116,25 +121,43 @@ TERMS_HTML = f"""
 """
 
 
-@st.dialog("Terms of Use", width="large", dismissible=False)
-def terms_gate():
-    """Shown once per session before the advisory is usable.
+if HAS_DIALOG:
+    @st.dialog("Terms of Use", width="large", dismissible=False)
+    def terms_gate():
+        """Shown once per session before the advisory is usable.
 
-    A safety tool that touches pregnancy, children and the elderly should state
-    its limits before it gives a first answer, not in a footnote afterwards.
-    Not dismissible: the script calls st.stop() behind this, so an X would
-    leave the reader on a dead page with no way back.
-    """
-    st.markdown(TERMS_HTML, unsafe_allow_html=True)
-    if st.button("I understand and agree", type="primary", use_container_width=True):
-        st.session_state.terms_accepted = True
-        st.rerun()
+        A safety tool that touches pregnancy, children and the elderly should state
+        its limits before it gives a first answer, not in a footnote afterwards.
+        Not dismissible: the script calls st.stop() behind this, so an X would
+        leave the reader on a dead page with no way back.
+        """
+        st.markdown(TERMS_HTML, unsafe_allow_html=True)
+        if st.button("I understand and agree", type="primary", use_container_width=True):
+            st.session_state.terms_accepted = True
+            st.rerun()
 
+    @st.dialog("Terms of Use", width="large")
+    def terms_view():
+        """The same text, re-openable from the sidebar after acceptance."""
+        st.markdown(TERMS_HTML, unsafe_allow_html=True)
+else:
+    # Fallback for older Streamlit: show terms inline, once per session.
+    def terms_gate():
+        if not st.session_state.get("terms_shown"):
+            st.warning(
+                "⚠️ **Please read before using**\n\n" +
+                TERMS_HTML.replace("<div class='terms'>", "").replace("</div>", "")
+            )
+            if st.button("I understand and agree", type="primary", use_container_width=True):
+                st.session_state.terms_accepted = True
+                st.session_state.terms_shown = True
+                st.rerun()
+            st.stop()
+        st.session_state.setdefault("terms_accepted", True)
 
-@st.dialog("Terms of Use", width="large")
-def terms_view():
-    """The same text, re-openable from the sidebar after acceptance."""
-    st.markdown(TERMS_HTML, unsafe_allow_html=True)
+    def terms_view():
+        with st.expander("📋 Terms of Use"):
+            st.markdown(TERMS_HTML, unsafe_allow_html=True)
 
 
 # --------------------------------------------------------------- presentation
@@ -713,8 +736,9 @@ st.markdown(
 
 # Terms gate: the advisory is not reachable until its limits have been read.
 if not st.session_state.get("terms_accepted"):
-    terms_dialog(gating=True)
-    st.stop()
+    terms_gate()
+    if HAS_DIALOG:
+        st.stop()
 
 profile = build_profile()
 
@@ -725,7 +749,7 @@ if st.sidebar.button("Clear conversation", use_container_width=True):
     st.rerun()
 
 if st.sidebar.button("Terms of use", use_container_width=True):
-    terms_dialog(gating=False)
+    terms_view()
 
 st.sidebar.markdown(
     f"<div class='footer' style='margin-top:22px'>Issues · suggestions<br>"
