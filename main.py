@@ -18,14 +18,7 @@ from graph import build_graph
 
 app = FastAPI(title="Weather Advisory Bot")
 
-try:
-    _graph = build_graph()
-except Exception as e:
-    print(f"FATAL: build_graph() failed: {type(e).__name__}: {e}", flush=True)
-    import traceback
-    traceback.print_exc()
-    raise
-
+_graph = build_graph()
 _sessions: dict[str, list[dict]] = {}
 # Last profile seen for a session, so a profile set once keeps applying to
 # later turns without the page resending it.
