@@ -6,6 +6,19 @@ The model composes language. It does not decide facts, and it does not decide wh
 
 ---
 
+## 🚀 Live Demo
+
+**Try it now:** https://chatbotweather-gprxfjxtcfhiafwfsggmzw.streamlit.app/
+
+The live app shows:
+- Real-time weather from Open-Meteo
+- Policy selection traced (which SOP fired and why)
+- Per-claim provenance (where every number comes from)
+- Session memory (follow-ups remember context)
+- Audience gating audit (which policies were withheld and why)
+
+---
+
 ## Setup
 
 **Requirements:** Python 3.12+ ([download](https://www.python.org/downloads/))
