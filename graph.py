@@ -29,6 +29,7 @@ if hasattr(sys.stdout, "reconfigure"):
 from langgraph.graph import END, StateGraph
 
 from utils import grounding
+from utils.audience import derive_signals, describe_profile, gate_matches
 from utils.evaluator import evaluate_all_sops, load_sops, rank_sops
 from utils.geocoding import geocode_location as do_geocode
 from utils.llm import call_llm
@@ -57,10 +58,18 @@ class GraphState(TypedDict, total=False):
     location: str
     time_frame: str
 
+    # Who is asking. Supplied by the caller (optional profile panel) and
+    # augmented per-turn from the question itself. Drives audience gating.
+    profile: dict
+    audience_signals: list[str]
+    withheld_sops: list[dict]
+
     latitude: Optional[float]
     longitude: Optional[float]
     resolved_location: str
     geocode_error: Optional[str]
+    geocode_alternatives: list[str]
+    geocode_alias: Optional[str]
 
     weather_data: dict
     weather_error: Optional[str]
@@ -152,6 +161,15 @@ Reply with ONLY a compact JSON object, no prose:
     if activity.lower() in ("unknown", "none", "null", "") and last:
         activity = last.get("activity") or activity
 
+    # Last resort for location: the home city from the profile. Ranked below
+    # session history on purpose -- the city you last asked about beats the one
+    # you configured, or a follow-up would silently jump back home.
+    if location.lower() in ("unknown", "none", "null", ""):
+        home = str((state.get("profile") or {}).get("home_city") or "").strip()
+        if home:
+            location = home
+            _log("intent_and_slots", f"no location stated; using profile home_city={home!r}")
+
     state["activity"] = activity
     state["location"] = location
     state["time_frame"] = time_frame
@@ -173,7 +191,8 @@ def node_geocode_location(state: GraphState) -> GraphState:
         _log("geocode_location", "no location to resolve")
         return state
 
-    result = do_geocode(location)
+    country_hint = (state.get("profile") or {}).get("country")
+    result = do_geocode(location, country_hint=country_hint)
     if "error" in result:
         state["geocode_error"] = result["error"]
         _log("geocode_location", f"FAILED: {result['error']}")
@@ -182,9 +201,14 @@ def node_geocode_location(state: GraphState) -> GraphState:
     state["latitude"] = result["latitude"]
     state["longitude"] = result["longitude"]
     state["resolved_location"] = result["resolved_location"]
+    state["geocode_alternatives"] = result.get("alternatives", [])
+    state["geocode_alias"] = result.get("alias_applied")
+
+    detail = f"[{result['candidate_count']} candidates, best by feature class then population]"
+    if result.get("alias_applied"):
+        detail += f" [alias {result['alias_applied']}]"
     _log("geocode_location", f"{location!r} -> {result['resolved_location']} "
-                             f"({result['latitude']}, {result['longitude']}) "
-                             f"[{result['candidate_count']} candidates, took first]")
+                             f"({result['latitude']}, {result['longitude']}) {detail}")
     return state
 
 
@@ -253,7 +277,7 @@ def _activity_is_fuzzy_relevant(question: str, activity: str) -> Optional[str]:
 
 
 def node_evaluate_deterministic_sops(state: GraphState) -> GraphState:
-    """PURE PYTHON. No LLM. This is where 'which policy applies' is decided."""
+    """PURE PYTHON. No LLM. This is where 'which hazard exists' is decided."""
     sops = load_sops()
     matches = evaluate_all_sops(sops, state.get("weather_data", {}))
     state["matched_sops"] = matches
@@ -338,9 +362,65 @@ not_recommended"""
 
 # ---------------------------------------------------------------- N7
 
+def node_filter_by_audience(state: GraphState) -> GraphState:
+    """PURE PYTHON. Weather said a hazard exists; this says whether the policy
+    about it is addressed to THIS reader.
+
+    Separate from the weather evaluator on purpose: 'is it windy' and 'is this
+    pregnancy policy for you' are different questions, and only the first is
+    about the forecast. Withheld policies are kept, not dropped, so the audit
+    trail can show what was filtered and why.
+    """
+    matches = state.get("matched_sops", [])
+    profile = state.get("profile") or {}
+    question = state.get("user_question", "")
+    activity = state.get("activity", "")
+
+    eligible, withheld = gate_matches(matches, profile, question, activity)
+    state["matched_sops"] = eligible
+    state["withheld_sops"] = withheld
+    state["audience_signals"] = sorted(derive_signals(profile, question, activity))
+
+    if withheld:
+        _log("filter_by_audience",
+             f"{len(eligible)} addressed to this user, {len(withheld)} withheld: "
+             + "; ".join(f"{w['id']} ({w['audience_reason']})" for w in withheld))
+    else:
+        _log("filter_by_audience",
+             f"{len(eligible)} matched, none withheld | signals={state['audience_signals'] or 'none'}")
+    return state
+
+
+# ---------------------------------------------------------------- N7
+
 def node_resolve_and_rank(state: GraphState) -> GraphState:
-    """PURE PYTHON ranking: (severity DESC, specificity DESC), keep top 3."""
-    ranked = rank_sops(state.get("matched_sops", []))
+    """PURE PYTHON ranking: (severity DESC, specificity DESC), keep top 3.
+
+    One general rule beyond the sort: a policy flagged `baseline` in the JSON
+    is a fallback, so it yields whenever a real hazard policy is present, and
+    it only speaks at all for an activity the library actually covers. That
+    keeps "I don't have guidance for that" meaning what the brief intends --
+    a question no rule covers -- rather than firing on every mild day.
+    """
+    matches = state.get("matched_sops", [])
+    hazards = [m for m in matches if not m.get("baseline")]
+    baselines = [m for m in matches if m.get("baseline")]
+
+    if hazards:
+        matches = hazards
+    elif baselines:
+        activity = (state.get("activity") or "").strip().lower()
+        activity_known = activity not in ("unknown", "none", "null", "")
+        # A baseline policy must match the user's activity positively; it never
+        # fills in for an activity we do not recognise.
+        if not activity_known:
+            matches = []
+            _log("resolve_and_rank", "baseline policy suppressed: activity unknown")
+        else:
+            matches = baselines
+            _log("resolve_and_rank", f"no hazard policy fired -- baseline {baselines[0]['id']} applies")
+
+    ranked = rank_sops(matches)
     state["top_3_sops"] = ranked[:3]
     state["chosen_sop"] = ranked[0] if ranked else None
     state["other_candidates"] = ranked[3:]
@@ -381,8 +461,16 @@ def _compose_prompt(state: GraphState, offending: list[str] | None = None) -> st
             f"{', '.join(offending)}. Use only the numbers given. Do not round them differently."
         )
 
+    profile = state.get("profile") or {}
+    signals = set(state.get("audience_signals") or [])
+    name = str(profile.get("name") or "").strip()
+    address_note = (
+        f"\nAddress them by name ({name}) once, naturally, at the start." if name else ""
+    )
+
     return f"""A user asked: "{state['user_question']}"
 Their activity: {state.get('activity')} | Location: {state.get('resolved_location')} | When: {state.get('time_frame')}
+Who is asking: {describe_profile(profile, signals)}{address_note}
 
 {grounding.whitelist_block(state['weather_data'], top_3)}
 
@@ -492,6 +580,18 @@ def node_return_response(state: GraphState) -> GraphState:
                 ],
                 "other_candidates": [s["id"] for s in state.get("other_candidates", [])],
                 "ranking_rule": "severity DESC, then specificity DESC -- decided in Python, never by the model",
+                "audience": {
+                    "signals": state.get("audience_signals", []),
+                    "withheld": [
+                        {"sop_id": w["id"], "name": w["name"], "reason": w["audience_reason"]}
+                        for w in state.get("withheld_sops", [])
+                    ],
+                },
+                "location_resolution": {
+                    "as_typed": state.get("location"),
+                    "alias_applied": state.get("geocode_alias"),
+                    "other_candidates": state.get("geocode_alternatives", []),
+                },
                 "weather_used": state.get("weather_data", {}),
                 "grounding": {
                     "violations": state.get("grounding_violations", []),
@@ -512,6 +612,18 @@ def node_return_response(state: GraphState) -> GraphState:
                 "chosen_sop_id": None,
                 "reason": "no_sop_matched",
                 "weather_used": state.get("weather_data", {}),
+                "audience": {
+                    "signals": state.get("audience_signals", []),
+                    "withheld": [
+                        {"sop_id": w["id"], "name": w["name"], "reason": w["audience_reason"]}
+                        for w in state.get("withheld_sops", [])
+                    ],
+                },
+                "location_resolution": {
+                    "as_typed": state.get("location"),
+                    "alias_applied": state.get("geocode_alias"),
+                    "other_candidates": state.get("geocode_alternatives", []),
+                },
                 "resolved_location": state.get("resolved_location"),
                 "activity": state.get("activity"),
                 "timestamp": datetime.now().isoformat(timespec="seconds"),
@@ -542,7 +654,7 @@ def route_after_weather(state: GraphState) -> str:
 
 
 def route_after_eval(state: GraphState) -> str:
-    return "fuzzy_check_node" if state.get("needs_fuzzy_check") else "resolve_and_rank"
+    return "fuzzy_check_node" if state.get("needs_fuzzy_check") else "filter_by_audience"
 
 
 def build_graph():
@@ -555,6 +667,7 @@ def build_graph():
         ("error_node", node_error),
         ("evaluate_deterministic_sops", node_evaluate_deterministic_sops),
         ("fuzzy_check_node", node_fuzzy_check),
+        ("filter_by_audience", node_filter_by_audience),
         ("resolve_and_rank", node_resolve_and_rank),
         ("compose_response", node_compose_response),
         ("grounding_validate", node_grounding_validate),
@@ -571,8 +684,10 @@ def build_graph():
                              "evaluate_deterministic_sops": "evaluate_deterministic_sops"})
     g.add_edge("error_node", "return_response")
     g.add_conditional_edges("evaluate_deterministic_sops", route_after_eval,
-                            {"fuzzy_check_node": "fuzzy_check_node", "resolve_and_rank": "resolve_and_rank"})
-    g.add_edge("fuzzy_check_node", "resolve_and_rank")
+                            {"fuzzy_check_node": "fuzzy_check_node",
+                             "filter_by_audience": "filter_by_audience"})
+    g.add_edge("fuzzy_check_node", "filter_by_audience")
+    g.add_edge("filter_by_audience", "resolve_and_rank")
     g.add_edge("resolve_and_rank", "compose_response")
     g.add_edge("compose_response", "grounding_validate")
     g.add_edge("grounding_validate", "return_response")

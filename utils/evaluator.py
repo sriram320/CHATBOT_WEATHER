@@ -32,6 +32,10 @@ _OPS = {
 _MATCH_FIELDS = (
     "id", "name", "severity", "severity_name", "category",
     "description", "advice_template", "traceable_to_api",
+    # Who the policy is written for, and whether it is a fallback policy.
+    # Both are read downstream (utils/audience.py, node_resolve_and_rank);
+    # this file still never interprets them.
+    "applies_to", "baseline",
 )
 
 

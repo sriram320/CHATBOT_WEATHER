@@ -54,8 +54,8 @@ def _w(**overrides):
     return {"current": current, "daily": daily}
 
 
-def run(question, weather_data=None, history=None, coords=(12.9716, 77.5946)):
-    state = {"user_question": question, "session_history": history or []}
+def run(question, weather_data=None, history=None, coords=(12.9716, 77.5946), profile=None):
+    state = {"user_question": question, "session_history": history or [], "profile": profile or {}}
     if weather_data is not None:
         state["weather_data"] = weather_data
         state["latitude"], state["longitude"] = coords
@@ -261,6 +261,91 @@ def case_10_session_memory():
     )
 
 
+def case_11_audience_gating():
+    """A weather match is not the same as a policy being addressed to you.
+
+    Regression test for a real bug: SOP-022 is written for pregnant women, its
+    trigger is an ordinary temperature/rain band, and nothing read the
+    `applies_to` field -- so a generic cyclist was told about pregnancy balance
+    risk. Both directions matter, so both are asserted: the policy must stay
+    silent by default AND must still appear for someone it is actually for.
+    """
+    wet = _w(precipitation_probability=85, temperature_2m=14.7)
+    generic = run("Is it safe to cycle to work today?", wet)
+    pregnant = run("Is it safe to cycle to work today?", wet,
+                   profile={"gender": "female", "pregnant": True})
+
+    withheld = [w["id"] for w in generic.get("withheld_sops", [])]
+    ok = ("SOP-022" not in ids_in(generic) and "SOP-022" in withheld
+          and "SOP-022" in ids_in(pregnant))
+    record(
+        "11. Audience gating -- group policies do not fire at everyone",
+        "SOP-022 (pregnant_women) matches this weather; it must be withheld for a generic user and shown for a pregnant user",
+        "withheld by default, surfaced when the profile indicates it applies -- and visible in the audit trail either way",
+        ok,
+        f"generic top_3={ids_in(generic)} withheld={withheld} | "
+        f"pregnant top_3={ids_in(pregnant)}",
+    )
+
+
+def case_12_geocoding_not_silently_wrong():
+    """The one failure grounding cannot catch: right numbers, wrong place.
+
+    'Bangalore' is not in Open-Meteo's gazetteer (it stores 'Bengaluru'), and
+    the only result for that string is a neighbourhood in Karachi. Every number
+    downstream would have been real, traceable and about the wrong country.
+    """
+    from utils.geocoding import geocode_location
+    checks = {
+        "Bangalore": "India",
+        "Bombay": "India",
+        "London": "United Kingdom",
+        "Delhi": "India",
+    }
+    actual = {}
+    ok = True
+    for query, expected_country in checks.items():
+        result = geocode_location(query)
+        resolved = result.get("resolved_location", result.get("error", "?"))
+        actual[query] = resolved
+        if not resolved.endswith(expected_country):
+            ok = False
+    record(
+        "12. Location resolution -- common names must not land in the wrong country",
+        "renamed cities (Bangalore/Bombay) and ambiguous ones (London, Delhi) resolve to the place the user meant",
+        "each resolves to the expected country; a wrong hit here is invisible to grounding, so it must be caught here",
+        ok,
+        "; ".join(f"{k} -> {v}" for k, v in actual.items()),
+    )
+
+
+def case_13_baseline_vs_honest_no_match():
+    """The line between 'conditions are fine' and 'we have no rule for this'.
+
+    These must not collapse into each other. Benign weather for a COVERED
+    activity is a policy outcome and should give real, grounded advice. A
+    question about an activity the library does not cover must still get the
+    honest no-match the brief asks for -- the baseline policy must not paper
+    over it.
+    """
+    mild = _w()
+    covered = run("Is it safe to cycle today?", mild)
+    uncovered = run("Is it safe to read a book indoors?", mild)
+
+    ok = (ids_in(covered) == ["SOP-026"]
+          and not ids_in(uncovered)
+          and not grounding.validate_grounding(
+              covered.get("final_response", ""), mild, covered.get("top_3_sops", [])))
+    record(
+        "13. Baseline policy vs honest no-match",
+        "mild weather + covered activity -> grounded all-clear (SOP-026); mild weather + uncovered activity -> honest no-match",
+        "the all-clear fires only for activities the library covers, so 'I don't have guidance' keeps meaning what the brief intends",
+        ok,
+        f"covered top_3={ids_in(covered)} | uncovered top_3={ids_in(uncovered) or 'none (honest no-match)'} | "
+        f"all-clear grounding violations={grounding.validate_grounding(covered.get('final_response', ''), mild, covered.get('top_3_sops', []))}",
+    )
+
+
 ALL = [
     case_1_clear_wind, case_2_clear_heat,
     case_3_paraphrase_cycling, case_4_paraphrase_kids_sun,
@@ -268,6 +353,9 @@ ALL = [
     case_6_no_match, case_7_api_down,
     case_8_injection, case_9_hallucinated_number_caught,
     case_10_session_memory,
+    case_11_audience_gating,
+    case_12_geocoding_not_silently_wrong,
+    case_13_baseline_vs_honest_no_match,
 ]
 
 

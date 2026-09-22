@@ -112,6 +112,28 @@
   }
   button:disabled { opacity: 0.5; cursor: default; }
   .typing { color: var(--muted); font-size: 13px; font-style: italic; }
+
+  #profileBar {
+    max-width: 720px; margin: 0 auto 4px; padding: 0 16px; width: 100%;
+    box-sizing: border-box;
+  }
+  #profileBar details {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 12px; font-size: 13px;
+  }
+  #profileBar summary { cursor: pointer; color: var(--muted); }
+  #profileBar .fields {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; align-items: center;
+  }
+  #profileBar input[type=text], #profileBar select {
+    background: var(--bg); color: var(--text); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 8px; font-size: 13px; font-family: inherit;
+  }
+  #profileBar label.chk {
+    display: inline-flex; align-items: center; gap: 5px; color: var(--muted);
+  }
+  #profileBar .note { color: var(--muted); margin-top: 8px; font-size: 12px; line-height: 1.5; }
+  #profileStatus { color: var(--low); font-size: 12px; margin-left: 4px; }
 </style>
 </head>
 <body>
@@ -123,6 +145,36 @@
   <div id="chat"></div>
 
   <div id="inputBar">
+    <div id="profileBar">
+      <details>
+        <summary>About you (optional) <span id="profileStatus"></span></summary>
+        <div class="fields">
+          <input id="pName" type="text" placeholder="Name" size="10" />
+          <input id="pCity" type="text" placeholder="Default city" size="12" />
+          <select id="pAge">
+            <option value="">Age group</option>
+            <option value="adult">Adult</option>
+            <option value="child">Child (5-15)</option>
+            <option value="elderly">Elderly (60+)</option>
+          </select>
+          <select id="pGender">
+            <option value="">Gender</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="other">Other</option>
+          </select>
+          <label class="chk"><input id="pPregnant" type="checkbox" /> Pregnant</label>
+          <label class="chk"><input id="pPets" type="checkbox" /> Have pets</label>
+          <button type="button" id="pSave">Save</button>
+        </div>
+        <div class="note">
+          Policies in our library declare who they are written for. Without this,
+          group-specific ones (pregnancy, children, elderly, pets) stay silent rather
+          than firing at everyone. You can skip this entirely &mdash; or just say it in
+          your question ("taking my toddler to the park"), which works for that turn too.
+        </div>
+      </details>
+    </div>
     <form id="form">
       <input id="q" type="text" placeholder="Ask about outdoor activity safety..." autocomplete="off" />
       <button type="submit" id="send">Send</button>
@@ -158,6 +210,35 @@ function severityBadge(sev) {
   return `<span class="badge ${sev}">${sev.toUpperCase()}</span>`;
 }
 
+function renderAudience(audit) {
+  const a = audit.audience;
+  if (!a) return '';
+  let html = '';
+  if (a.signals && a.signals.length) {
+    html += `<div class="audit-row" style="margin-top:6px;"><b>Who we understood you to be:</b> ${escapeHtml(a.signals.join(', '))}</div>`;
+  }
+  if (a.withheld && a.withheld.length) {
+    html += `<div class="audit-row" style="margin-top:6px;"><b>Policies that matched the weather but were not for you:</b></div>`;
+    a.withheld.forEach(w => {
+      html += `<div class="candidate" style="opacity:.75">${escapeHtml(w.sop_id)} — ${escapeHtml(w.name)}<div style="margin-left:12px">${escapeHtml(w.reason)}</div></div>`;
+    });
+  }
+  return html;
+}
+
+function renderLocationResolution(audit) {
+  const l = audit.location_resolution;
+  if (!l) return '';
+  let html = '';
+  if (l.alias_applied) {
+    html += `<div class="audit-row" style="opacity:.8">Name mapped: ${escapeHtml(l.alias_applied)}</div>`;
+  }
+  if (l.other_candidates && l.other_candidates.length) {
+    html += `<div class="audit-row" style="opacity:.8">Other places with this name: ${escapeHtml(l.other_candidates.join(' · '))}</div>`;
+  }
+  return html;
+}
+
 function renderAudit(audit) {
   const details = document.createElement('details');
   const summary = document.createElement('summary');
@@ -174,6 +255,8 @@ function renderAudit(audit) {
   } else if (!audit.top_3 || !audit.top_3.length) {
     html = `<div class="audit-row"><b>No policy matched.</b> ${escapeHtml(audit.reason || '')}</div>
             <div class="audit-row"><i>The honest "no guidance" answer is returned without calling the model at all, so no advice can be invented here.</i></div>`;
+    html += renderLocationResolution(audit);
+    html += renderAudience(audit);
   } else {
     html += `<div class="audit-row"><b>Policies applied (ranked)</b></div>`;
     audit.top_3.forEach(s => {
@@ -217,6 +300,8 @@ function renderAudit(audit) {
     if (audit.resolved_location) {
       html += `<div class="audit-row">Location resolved to: ${escapeHtml(audit.resolved_location)} · activity: ${escapeHtml(audit.activity || 'unknown')}</div>`;
     }
+    html += renderLocationResolution(audit);
+    html += renderAudience(audit);
   }
 
   body.innerHTML = html;
@@ -229,6 +314,30 @@ function escapeHtml(s) {
   div.textContent = s;
   return div.innerHTML;
 }
+
+function readProfile() {
+  const p = {
+    name: document.getElementById('pName').value.trim(),
+    age_group: document.getElementById('pAge').value,
+    gender: document.getElementById('pGender').value,
+    pregnant: document.getElementById('pPregnant').checked,
+    has_pets: document.getElementById('pPets').checked,
+    home_city: document.getElementById('pCity').value.trim(),
+  };
+  // Send only what was actually filled in, so an empty panel is indistinguishable
+  // from no panel at all.
+  const out = {};
+  for (const [k, v] of Object.entries(p)) if (v) out[k] = v;
+  return Object.keys(out).length ? out : null;
+}
+
+document.getElementById('pSave').addEventListener('click', () => {
+  const p = readProfile();
+  const status = document.getElementById('profileStatus');
+  status.textContent = p ? '· saved' : '· nothing set';
+  setTimeout(() => { status.textContent = ''; }, 2500);
+  input.focus();
+});
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -249,7 +358,7 @@ form.addEventListener('submit', async (e) => {
     const resp = await fetch('/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: text, session_id: sessionId }),
+      body: JSON.stringify({ message: text, session_id: sessionId, profile: readProfile() }),
     });
     const data = await resp.json();
     sessionId = data.session_id;

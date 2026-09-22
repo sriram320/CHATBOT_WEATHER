@@ -20,6 +20,9 @@ app = FastAPI(title="Weather Advisory Bot")
 
 _graph = build_graph()
 _sessions: dict[str, list[dict]] = {}
+# Last profile seen for a session, so a profile set once keeps applying to
+# later turns without the page resending it.
+_profiles: dict[str, dict] = {}
 
 STATIC_DIR = Path(__file__).parent / "static"
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -28,6 +31,10 @@ app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 class ChatRequest(BaseModel):
     message: str
     session_id: str | None = None
+    # Optional. Everything still works with no profile at all; supplying one
+    # only lets audience-scoped policies (pregnancy, pets, elderly, children)
+    # resolve correctly instead of staying silent.
+    profile: dict | None = None
 
 
 class ChatResponse(BaseModel):
@@ -46,10 +53,15 @@ def chat(req: ChatRequest) -> ChatResponse:
     session_id = req.session_id or str(uuid.uuid4())
     history = _sessions.get(session_id, [])
 
+    if req.profile:
+        _profiles[session_id] = {**_profiles.get(session_id, {}), **req.profile}
+    profile = _profiles.get(session_id, {})
+
     try:
         result = _graph.invoke({
             "user_question": req.message,
             "session_history": history,
+            "profile": profile,
         })
     except Exception as e:
         # Last-resort guard: any unhandled exception still gets an honest
@@ -72,4 +84,5 @@ def chat(req: ChatRequest) -> ChatResponse:
 @app.post("/reset")
 def reset(session_id: str) -> dict:
     _sessions.pop(session_id, None)
+    _profiles.pop(session_id, None)
     return {"ok": True}

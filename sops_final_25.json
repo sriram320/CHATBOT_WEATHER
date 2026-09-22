@@ -22,7 +22,7 @@
       "specificity": 1,
       "regional_context": "Bengaluru monsoon ending, erratic rains 60-80% daily",
       "why_this_sop": "September monsoon: 70% daily rain probability standard",
-      "advice_template": "Rain is {precipitation_probability}% likely today. Traffic delays expected, 30-60 min extra commute time.\n\nCOMMUTER ACTIONS:\n\u2713 Leave 30-45 min EARLIER\n\u2713 Use main roads (better drainage)\n\u2713 Public transport > 2-wheeler\n\u2713 Carry umbrella + waterproof bag\n\u2713 Inform office/college you may be late\n\u2713 Wear closed shoes, waterproof socks\n\nSTUDENT-SPECIFIC:\n\u2713 Arrive early before first class\n\u2713 Attend class (worth the commute delay)\n\nFAMILY WITH KIDS:\n\u2713 Drop kids early\n\u2713 Check school message board (closures)\n\nCYCLING:\n\u2717 DO NOT CYCLE in 70%+ rain\n\nRETURN HOME:\n\u2713 Leave office/college by 5 PM\n\u2713 Tell family ETA",
+      "advice_template": "Rain is {precipitation_probability}% likely today. Traffic delays expected, 30-60 min extra commute time.\n\nCOMMUTER ACTIONS:\n✓ Leave 30-45 min EARLIER\n✓ Use main roads (better drainage)\n✓ Public transport > 2-wheeler\n✓ Carry umbrella + waterproof bag\n✓ Inform office/college you may be late\n✓ Wear closed shoes, waterproof socks\n\nSTUDENT-SPECIFIC:\n✓ Arrive early before first class\n✓ Attend class (worth the commute delay)\n\nFAMILY WITH KIDS:\n✓ Drop kids early\n✓ Check school message board (closures)\n\nCYCLING:\n✗ DO NOT CYCLE in 70%+ rain\n\nRETURN HOME:\n✓ Leave office/college by 5 PM\n✓ Tell family ETA",
       "traceable_to_api": "precipitation_probability from /forecast endpoint"
     },
     {
@@ -47,7 +47,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru monsoon 30-100mm daily. >40mm causes waterlogging",
       "why_this_sop": "Heavy rains cause massive disruption to city",
-      "advice_template": "Heavy rainfall ({precipitation_sum} mm) forecast. Flooding risk, waterlogging expected, severe traffic delays.\n\nIMMEDIATE ACTIONS:\n\u2713 AVOID commute if possible (work from home)\n\u2713 Leave 1-1.5 hours EARLY if must travel\n\u2713 Avoid underpasses (flooding points)\n\u2713 Use main roads only\n\nTRANSPORT:\n\u2713 4-wheeler: Only option\n\u2713 2-wheeler: DO NOT ATTEMPT\n\u2713 Cycle: DO NOT ATTEMPT\n\u2713 Public transport: Safest alternative\n\nROUTE KNOWLEDGE:\n\u2713 Know which areas flood\n\u2713 Avoid Bellandur Lake, Sankey Tank areas\n\nSCHOOL/COLLEGE:\n\u2713 Check institution message board\n\u2713 May announce closure\n\nAT HOME:\n\u2713 Dry off immediately\n\u2713 Warm shower within 1 hour\n\u2713 Change to dry clothes\n\u2713 Warm drink (tea/coffee)",
+      "advice_template": "Heavy rainfall ({precipitation_sum} mm) forecast. Flooding risk, waterlogging expected, severe traffic delays.\n\nIMMEDIATE ACTIONS:\n✓ AVOID commute if possible (work from home)\n✓ Leave 1-1.5 hours EARLY if must travel\n✓ Avoid underpasses (flooding points)\n✓ Use main roads only\n\nTRANSPORT:\n✓ 4-wheeler: Only option\n✓ 2-wheeler: DO NOT ATTEMPT\n✓ Cycle: DO NOT ATTEMPT\n✓ Public transport: Safest alternative\n\nROUTE KNOWLEDGE:\n✓ Know which areas flood\n✓ Avoid Bellandur Lake, Sankey Tank areas\n\nSCHOOL/COLLEGE:\n✓ Check institution message board\n✓ May announce closure\n\nAT HOME:\n✓ Dry off immediately\n✓ Warm shower within 1 hour\n✓ Change to dry clothes\n✓ Warm drink (tea/coffee)",
       "traceable_to_api": "precipitation_sum from /daily endpoint"
     },
     {
@@ -84,7 +84,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru monsoon thunderstorms: rain + wind gusts 30-50 km/h",
       "why_this_sop": "Compound hazard more dangerous than rain alone",
-      "advice_template": "Rain + strong wind detected. Compound hazard \u2014 more dangerous than rain alone.\n\nCYCLING:\n\u2717 DO NOT CYCLE TODAY\nRain + wind = UNSAFE\n\nWALKING:\n\u2713 Use umbrella carefully\n\u2713 Hold umbrella low (visibility important)\n\u2713 Wear waterproof coat\n\u2713 Avoid loose clothing\n\u2713 Walk near buildings/walls\n\nDRIVING:\n\u2713 Slow down (wet roads = lower traction)\n\u2713 Increase following distance\n\u2713 Hands 2 & 10 on wheel\n\u2713 Avoid highway\n\u2713 Watch for fallen branches\n\nPUBLIC TRANSPORT:\n\u2713 SAFEST option today\n\nTIMING:\n\u2713 Travel early morning or early evening\n\nAT DESTINATION:\n\u2713 Dry off before doing anything",
+      "advice_template": "Rain + strong wind detected. Compound hazard — more dangerous than rain alone.\n\nCYCLING:\n✗ DO NOT CYCLE TODAY\nRain + wind = UNSAFE\n\nWALKING:\n✓ Use umbrella carefully\n✓ Hold umbrella low (visibility important)\n✓ Wear waterproof coat\n✓ Avoid loose clothing\n✓ Walk near buildings/walls\n\nDRIVING:\n✓ Slow down (wet roads = lower traction)\n✓ Increase following distance\n✓ Hands 2 & 10 on wheel\n✓ Avoid highway\n✓ Watch for fallen branches\n\nPUBLIC TRANSPORT:\n✓ SAFEST option today\n\nTIMING:\n✓ Travel early morning or early evening\n\nAT DESTINATION:\n✓ Dry off before doing anything",
       "traceable_to_api": "precipitation_probability and wind_speed_10m from /current"
     },
     {
@@ -99,7 +99,7 @@
         "athletes",
         "fitness_enthusiasts"
       ],
-      "description": "Temperature > 40\u00b0C (heat stroke risk)",
+      "description": "Temperature > 40°C (heat stroke risk)",
       "condition": {
         "metric": "temperature_2m",
         "op": ">",
@@ -108,9 +108,9 @@
       "severity": 3,
       "severity_name": "high",
       "specificity": 2,
-      "regional_context": "Bengaluru pre-monsoon (April-May) 35-40\u00b0C. September: Rare extreme heat",
-      "why_this_sop": "Heat stroke risk HIGH in 40\u00b0C+ heat during exercise",
-      "advice_template": "Temperature is {temperature_2m}\u00b0C \u2014 dangerously hot for outdoor exercise.\n\nOUTDOOR EXERCISE:\n\u2717 DO NOT RUN/CYCLE OUTDOORS\nHeat stroke risk is HIGH\n\nALTERNATIVE OPTIONS:\n\u2713 Indoor gym: AC, treadmill, weights\n\u2713 Mall walking: Early morning 6-7 AM\n\u2713 Swimming: Indoor pool only\n\u2713 Home workout: AC room\n\u2713 Evening: After 7 PM\n\nIF MUST EXERCISE OUTDOORS:\n\u2713 EARLY MORNING ONLY: 5:30-7 AM\n\u2713 Duration: MAX 20-30 min\n\u2713 Hydration: 500ml water + sips\n\u2713 Route: Shaded paths only\n\u2713 Clothing: Light-colored, moisture-wicking\n\u2713 Hat: Mandatory\n\u2713 Buddies: Never alone\n\nHEAT STROKE SIGNS (STOP IMMEDIATELY):\n\u2713 Dizziness, lightheadedness\n\u2713 Nausea, vomiting\n\u2713 Excessive fatigue\n\u2713 Confusion\n\u2713 Stop sweating (CRITICAL)",
+      "regional_context": "Bengaluru pre-monsoon (April-May) 35-40°C. September: Rare extreme heat",
+      "why_this_sop": "Heat stroke risk HIGH in 40°C+ heat during exercise",
+      "advice_template": "Temperature is {temperature_2m}°C — dangerously hot for outdoor exercise.\n\nOUTDOOR EXERCISE:\n✗ DO NOT RUN/CYCLE OUTDOORS\nHeat stroke risk is HIGH\n\nALTERNATIVE OPTIONS:\n✓ Indoor gym: AC, treadmill, weights\n✓ Mall walking: Early morning 6-7 AM\n✓ Swimming: Indoor pool only\n✓ Home workout: AC room\n✓ Evening: After 7 PM\n\nIF MUST EXERCISE OUTDOORS:\n✓ EARLY MORNING ONLY: 5:30-7 AM\n✓ Duration: MAX 20-30 min\n✓ Hydration: 500ml water + sips\n✓ Route: Shaded paths only\n✓ Clothing: Light-colored, moisture-wicking\n✓ Hat: Mandatory\n✓ Buddies: Never alone\n\nHEAT STROKE SIGNS (STOP IMMEDIATELY):\n✓ Dizziness, lightheadedness\n✓ Nausea, vomiting\n✓ Excessive fatigue\n✓ Confusion\n✓ Stop sweating (CRITICAL)",
       "traceable_to_api": "temperature_2m from /current"
     },
     {
@@ -137,7 +137,7 @@
       "specificity": 1,
       "regional_context": "Bengaluru pre-monsoon UV 10-11. Monsoon (Sept): 5-7 (lower)",
       "why_this_sop": "Unprotected skin burns in 15-20 min at UV 8+",
-      "advice_template": "UV index is {uv_index} \u2014 extreme. Unprotected skin burns in 15-20 minutes.\n\nOUTDOOR SPORTS:\n\u2713 SHIFT TIMING:\n  - Morning: 6:30-8:30 AM\n  - Evening: 5:30-7:30 PM\n  - AVOID: 10 AM - 4 PM\n\n\u2713 PROTECTION (If must play 10-4 PM):\n  - Sunscreen: SPF 50+ PA++++\n  - Reapply: Every 90 min\n  - Clothing: Full sleeves, long pants\n  - Hat: Mandatory\n  - Sunglasses: UV 400\n  - Neck: Lightweight scarf\n\n\u2713 HYDRATION:\n  - 500ml water every 15-20 min\n  - Sports drink with electrolytes\n\n\u2713 BREAKS:\n  - Every 30-45 min: 10-15 min shade\n  - Reapply sunscreen\n\nPOST-PLAY:\n\u2713 Shower within 30 min\n\u2713 Apply aloe vera\n\u2713 Hydrate (1-2L water)\n\u2713 Rest in cool environment",
+      "advice_template": "UV index is {uv_index} — extreme. Unprotected skin burns in 15-20 minutes.\n\nOUTDOOR SPORTS:\n✓ SHIFT TIMING:\n  - Morning: 6:30-8:30 AM\n  - Evening: 5:30-7:30 PM\n  - AVOID: 10 AM - 4 PM\n\n✓ PROTECTION (If must play 10-4 PM):\n  - Sunscreen: SPF 50+ PA++++\n  - Reapply: Every 90 min\n  - Clothing: Full sleeves, long pants\n  - Hat: Mandatory\n  - Sunglasses: UV 400\n  - Neck: Lightweight scarf\n\n✓ HYDRATION:\n  - 500ml water every 15-20 min\n  - Sports drink with electrolytes\n\n✓ BREAKS:\n  - Every 30-45 min: 10-15 min shade\n  - Reapply sunscreen\n\nPOST-PLAY:\n✓ Shower within 30 min\n✓ Apply aloe vera\n✓ Hydrate (1-2L water)\n✓ Rest in cool environment",
       "traceable_to_api": "uv_index from /current"
     },
     {
@@ -151,7 +151,7 @@
         "caregivers",
         "families_with_elderly"
       ],
-      "description": "Temperature > 38\u00b0C (heat stroke risk for elderly)",
+      "description": "Temperature > 38°C (heat stroke risk for elderly)",
       "condition": {
         "metric": "temperature_2m",
         "op": ">",
@@ -160,9 +160,9 @@
       "severity": 3,
       "severity_name": "high",
       "specificity": 1,
-      "regional_context": "Bengaluru pre-monsoon 35-40\u00b0C. Post-monsoon 32-38\u00b0C",
+      "regional_context": "Bengaluru pre-monsoon 35-40°C. Post-monsoon 32-38°C",
       "why_this_sop": "Thermoregulation fails at 60+, heat stroke risk high",
-      "advice_template": "Temperature is {temperature_2m}\u00b0C. Elderly (60+) are at risk of heat stroke.\n\nELDERLY THEMSELVES:\n\u2713 AVOID going out 10 AM - 4 PM\n\u2713 Morning activities: 6-9 AM\n\u2713 Evening activities: 6-8 PM\n\u2713 Indoors during heat: AC room\n\n\u2713 HYDRATION (CRITICAL at 60+):\n  - Drink BEFORE thirst (thirst sense weakens)\n  - Sip 100ml every 20 min\n  - Total: 2-2.5L daily\n  - Electrolyte: Home ORS\n  - Avoid: Coffee, tea (diuretics)\n\n\u2713 MEDICATION CHECK:\n  - Ask doctor: Heat sensitivity side effects?\n  - Diuretics: Higher dehydration risk\n  - Diabetes meds: Heat masks symptoms\n\n\u2713 PHYSICAL ACTIVITY:\n  - Walking: 30-45 min only\n  - Morning/evening only\n  - Slow pace, comfortable\n  - Companions: Never alone\n  - Shaded paths\n\nFAMILY/CAREGIVERS:\n\u2713 Check daily on elderly\n\u2713 Monitor for confusion, weakness\n\u2713 Encourage hydration every 30 min\n\u2713 Keep home cool: AC on\n\u2713 Light meals\n\u2713 Light, loose cotton clothing",
+      "advice_template": "Temperature is {temperature_2m}°C. Elderly (60+) are at risk of heat stroke.\n\nELDERLY THEMSELVES:\n✓ AVOID going out 10 AM - 4 PM\n✓ Morning activities: 6-9 AM\n✓ Evening activities: 6-8 PM\n✓ Indoors during heat: AC room\n\n✓ HYDRATION (CRITICAL at 60+):\n  - Drink BEFORE thirst (thirst sense weakens)\n  - Sip 100ml every 20 min\n  - Total: 2-2.5L daily\n  - Electrolyte: Home ORS\n  - Avoid: Coffee, tea (diuretics)\n\n✓ MEDICATION CHECK:\n  - Ask doctor: Heat sensitivity side effects?\n  - Diuretics: Higher dehydration risk\n  - Diabetes meds: Heat masks symptoms\n\n✓ PHYSICAL ACTIVITY:\n  - Walking: 30-45 min only\n  - Morning/evening only\n  - Slow pace, comfortable\n  - Companions: Never alone\n  - Shaded paths\n\nFAMILY/CAREGIVERS:\n✓ Check daily on elderly\n✓ Monitor for confusion, weakness\n✓ Encourage hydration every 30 min\n✓ Keep home cool: AC on\n✓ Light meals\n✓ Light, loose cotton clothing",
       "traceable_to_api": "temperature_2m from /current"
     },
     {
@@ -175,7 +175,7 @@
         "all_ages",
         "esp_elderly_kids_pregnant"
       ],
-      "description": "High temperature (>35\u00b0C) + high humidity (>80%)",
+      "description": "High temperature (>35°C) + high humidity (>80%)",
       "condition": {
         "all_of": [
           {
@@ -197,7 +197,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru coastal monsoon 75-95% humidity",
       "why_this_sop": "Sweat can't evaporate, body can't cool, heat stroke faster",
-      "advice_template": "Temperature is {temperature_2m}\u00b0C with very high humidity (>80%). Dangerous \u2014 sweat doesn't evaporate.\n\nEVERYONE:\n\u2713 INDOOR ACTIVITIES ONLY\n\u2713 Hydration: 3-4L water daily\n\u2713 Breaks: Every 30 min in AC\n\u2713 Timing: Only 6-8 AM or 7-9 PM\n\u2713 Clothing: Minimal, light-colored\n\nKIDS:\n\u2713 NO outdoor play\n\u2713 Indoor games, AC room\n\u2713 Hydration: Every 15-20 min\n\u2713 School: May announce closure\n\nELDERLY:\n\u2713 STAY INDOORS\n\u2713 AC room, cool space\n\u2713 Hydration: Every 20 min\n\nPREGNANT WOMEN:\n\u2713 Core temp already 0.5\u00b0C higher\n\u2713 INDOOR ONLY\n\u2713 Hydration: 4L daily\n\u2713 AC essential\n\u2713 Alert doctor for clearance\n\nPETS:\n\u2713 KEEP INDOORS\n\u2713 Water constantly available\n\u2713 AC room mandatory\n\u2713 NO walks",
+      "advice_template": "Temperature is {temperature_2m}°C with very high humidity (>80%). Dangerous — sweat doesn't evaporate.\n\nEVERYONE:\n✓ INDOOR ACTIVITIES ONLY\n✓ Hydration: 3-4L water daily\n✓ Breaks: Every 30 min in AC\n✓ Timing: Only 6-8 AM or 7-9 PM\n✓ Clothing: Minimal, light-colored\n\nKIDS:\n✓ NO outdoor play\n✓ Indoor games, AC room\n✓ Hydration: Every 15-20 min\n✓ School: May announce closure\n\nELDERLY:\n✓ STAY INDOORS\n✓ AC room, cool space\n✓ Hydration: Every 20 min\n\nPREGNANT WOMEN:\n✓ Core temp already 0.5°C higher\n✓ INDOOR ONLY\n✓ Hydration: 4L daily\n✓ AC essential\n✓ Alert doctor for clearance\n\nPETS:\n✓ KEEP INDOORS\n✓ Water constantly available\n✓ AC room mandatory\n✓ NO walks",
       "traceable_to_api": "temperature_2m and humidity from /current"
     },
     {
@@ -245,7 +245,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru monsoon low-pressure May-Sept. Cyclone risk Bay of Bengal",
       "why_this_sop": "Every outdoor activity carries elevated risk today",
-      "advice_template": "SEVERE WEATHER SYSTEM ACTIVE. Heavy rainfall, strong winds, poor visibility.\n\nEVERY OUTDOOR ACTIVITY CARRIES ELEVATED RISK TODAY.\n\nIMMEDIATE ACTIONS:\n\u2717 AVOID going out unless absolutely necessary\n\u2713 Essential errands only\n\nWHAT'S HAPPENING:\n- Heavy rainfall: 50-150+ mm forecast\n- Strong winds: 40-60 km/h gusts\n- Poor visibility: < 500m\n- Potential flooding: Low-lying areas\n- Lightning risk: Thunderstorms embedded\n\nIF MUST GO OUT:\n\u2713 Transport: 4-wheeler car ONLY\n\u2713 Route: Main roads only, avoid underpasses\n\u2713 Driving: Slow 30-40 km/h\n\u2713 Tell family: Where going, when back, your route\n\u2713 Phone: Fully charged\n\u2713 Timing: Avoid peak rain hours\n\nAT WORK/SCHOOL:\n\u2713 Already there? STAY until weather clears\n\u2713 2-3 hours after rain stops\n\u2713 Inform family you're staying\n\nAT HOME:\n\u2713 Close windows and doors\n\u2713 Secure balcony items\n\u2713 Unplug electronics (lightning risk)\n\u2713 Stock food, water, medicines\n\u2713 Flashlight ready\n\u2713 Keep phone charged\n\nVULNERABLE GROUPS:\n\u2713 Elderly: STAY INDOORS\n\u2713 Kids: STAY INDOORS\n\u2713 Pregnant: STAY INDOORS\n\u2713 Pets: STAY INDOORS\n\nPOWER OUTAGE PREP:\n\u2713 Charge devices now\n\u2713 Fill water bottles\n\u2713 Gather flashlights, batteries\n\u2713 Non-perishable food ready",
+      "advice_template": "SEVERE WEATHER SYSTEM ACTIVE. Heavy rainfall, strong winds, poor visibility.\n\nEVERY OUTDOOR ACTIVITY CARRIES ELEVATED RISK TODAY.\n\nIMMEDIATE ACTIONS:\n✗ AVOID going out unless absolutely necessary\n✓ Essential errands only\n\nWHAT'S HAPPENING:\n- Heavy rainfall: 50-150+ mm forecast\n- Strong winds: 40-60 km/h gusts\n- Poor visibility: < 500m\n- Potential flooding: Low-lying areas\n- Lightning risk: Thunderstorms embedded\n\nIF MUST GO OUT:\n✓ Transport: 4-wheeler car ONLY\n✓ Route: Main roads only, avoid underpasses\n✓ Driving: Slow 30-40 km/h\n✓ Tell family: Where going, when back, your route\n✓ Phone: Fully charged\n✓ Timing: Avoid peak rain hours\n\nAT WORK/SCHOOL:\n✓ Already there? STAY until weather clears\n✓ 2-3 hours after rain stops\n✓ Inform family you're staying\n\nAT HOME:\n✓ Close windows and doors\n✓ Secure balcony items\n✓ Unplug electronics (lightning risk)\n✓ Stock food, water, medicines\n✓ Flashlight ready\n✓ Keep phone charged\n\nVULNERABLE GROUPS:\n✓ Elderly: STAY INDOORS\n✓ Kids: STAY INDOORS\n✓ Pregnant: STAY INDOORS\n✓ Pets: STAY INDOORS\n\nPOWER OUTAGE PREP:\n✓ Charge devices now\n✓ Fill water bottles\n✓ Gather flashlights, batteries\n✓ Non-perishable food ready",
       "traceable_to_api": "weather_code, wind_speed_10m, precipitation_sum"
     },
     {
@@ -277,7 +277,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru monsoon thunderstorms 2-4 PM. Sept: Still active",
       "why_this_sop": "Lightning is immediate life threat",
-      "advice_template": "Active thunderstorm nearby \u2014 lightning and heavy rain. Immediate safety risk.\n\nCRITICAL: GET INDOORS NOW\nLightning does not discriminate.\n\nIF OUTDOORS RIGHT NOW:\n\u2713 GET INDOORS immediately\n\u2717 DO NOT:\n  - Run to tree (attracts lightning)\n  - Use umbrella (metal conducts)\n  - Stand under power lines\n  - Use mobile phone\n\u2713 If stuck outside:\n  - Squat low (reduce height)\n  - Keep feet together\n  - Stay away from metal\n  - Move to building ASAP\n\nIF IN BUILDING:\n\u2713 Close windows, doors\n\u2713 Away from windows\n\u2713 Avoid touching metal\n\u2713 Unplug electronics\n\u2713 Don't use phone\n\u2713 Avoid baths/showers\n\u2713 Away from walls with wiring\n\u2713 Interior room safest\n\nIF IN VEHICLE:\n\u2713 SAFE place (metal cage protects)\n\u2713 Close windows\n\u2713 Don't touch metal inside\n\u2713 Don't drive if visibility poor\n\nDISTANCE RULE:\n\u2713 See lightning \u2192 count to thunder\n\u2713 Every 3 seconds = 1km\n\u2713 If < 30 sec (< 10km): VERY CLOSE, stay indoors\n\u2713 If > 30 sec (> 10km): Further, stay alert\n\nTIMING:\n\u2713 Wait 30 min AFTER last lightning\n\nAFTER STORM:\n\u2713 Check for damage\n\u2713 Report downed power lines",
+      "advice_template": "Active thunderstorm nearby — lightning and heavy rain. Immediate safety risk.\n\nCRITICAL: GET INDOORS NOW\nLightning does not discriminate.\n\nIF OUTDOORS RIGHT NOW:\n✓ GET INDOORS immediately\n✗ DO NOT:\n  - Run to tree (attracts lightning)\n  - Use umbrella (metal conducts)\n  - Stand under power lines\n  - Use mobile phone\n✓ If stuck outside:\n  - Squat low (reduce height)\n  - Keep feet together\n  - Stay away from metal\n  - Move to building ASAP\n\nIF IN BUILDING:\n✓ Close windows, doors\n✓ Away from windows\n✓ Avoid touching metal\n✓ Unplug electronics\n✓ Don't use phone\n✓ Avoid baths/showers\n✓ Away from walls with wiring\n✓ Interior room safest\n\nIF IN VEHICLE:\n✓ SAFE place (metal cage protects)\n✓ Close windows\n✓ Don't touch metal inside\n✓ Don't drive if visibility poor\n\nDISTANCE RULE:\n✓ See lightning → count to thunder\n✓ Every 3 seconds = 1km\n✓ If < 30 sec (< 10km): VERY CLOSE, stay indoors\n✓ If > 30 sec (> 10km): Further, stay alert\n\nTIMING:\n✓ Wait 30 min AFTER last lightning\n\nAFTER STORM:\n✓ Check for damage\n✓ Report downed power lines",
       "traceable_to_api": "weather_code from /current (WMO codes)"
     },
     {
@@ -292,14 +292,14 @@
         "social_groups"
       ],
       "description": "Holistic judgment on picnic suitability",
-      "semantic_hint": "Consider: temp ideal 20-30\u00b0C, rain ideal < 30%, wind ideal < 20 km/h, UV ideal < 7. If 1-2 factors mildly bad but others good = okay with precautions. If 3+ factors bad = not a good day.",
+      "semantic_hint": "Consider: temp ideal 20-30°C, rain ideal < 30%, wind ideal < 20 km/h, UV ideal < 7. If 1-2 factors mildly bad but others good = okay with precautions. If 3+ factors bad = not a good day.",
       "severity": 1,
       "severity_name": "low",
       "specificity": 0,
       "regional_context": "Bengaluru post-monsoon (late Sept onwards) best picnic weather",
       "why_this_sop": "Fuzzy SOP showing non-numeric scenario handling",
-      "advice_template": "Is today good for a picnic? Let me weigh the weather factors:\n\nWHAT MAKES A GOOD PICNIC DAY:\n\u2713 Temperature: 20-30\u00b0C (comfortable)\n\u2713 Rain: < 30% (mostly dry)\n\u2713 Wind: < 20 km/h (not blowing food)\n\u2713 UV: < 7 (won't burn)\n\u2713 Overall: Pleasant\n\nMY ASSESSMENT:\nTemp: {temperature_2m}\u00b0C (ideal 20-30\u00b0C)\nRain: {precipitation_probability}% (ideal < 30%)\nWind: {wind_speed_10m} km/h (ideal < 20)\nUV: {uv_index} (ideal < 7)\n\n[LLM FUZZY JUDGMENT]\n\nIF 8-10 (EXCELLENT):\n\u2713 Perfect picnic weather!\n\u2713 Full day outing OK\n\nIF 6-7 (OKAY, PRECAUTIONS):\n\u2713 Picnic possible with adjustments\n\u2192 Hot: Pick shaded park, extra water, 2-3 hours max\n\u2192 Rainy: Indoor backup, leave if rain\n\u2192 Windy: Sheltered spot\n\u2192 High UV: Sunscreen, umbrella\n\nIF 4-5 (NOT IDEAL):\n\u26a0\ufe0f Uncomfortable, consider postponing\n\u2192 Consider next day (likely better)\n\nIF 0-3 (NOT A GOOD DAY):\n\u2717 Don't go for outdoor picnic\n\u2192 Movie, mall, home-based gathering\n\u2192 Reschedule to next day\n\nPRACTICAL TIPS:\n\u2713 Water: 1L per person min\n\u2713 Snacks: Light food\n\u2713 Clothing: Light-colored\n\u2713 Gear: Umbrella, blanket, sunscreen\n\u2713 Timing: 9 AM - 5 PM",
-      "llm_prompt": "Given temp {temperature_2m}\u00b0C, rain {precipitation_probability}%, wind {wind_speed_10m} km/h, UV {uv_index}, score picnic feasibility 0-10.",
+      "advice_template": "Is today good for a picnic? Let me weigh the weather factors:\n\nWHAT MAKES A GOOD PICNIC DAY:\n✓ Temperature: 20-30°C (comfortable)\n✓ Rain: < 30% (mostly dry)\n✓ Wind: < 20 km/h (not blowing food)\n✓ UV: < 7 (won't burn)\n✓ Overall: Pleasant\n\nMY ASSESSMENT:\nTemp: {temperature_2m}°C (ideal 20-30°C)\nRain: {precipitation_probability}% (ideal < 30%)\nWind: {wind_speed_10m} km/h (ideal < 20)\nUV: {uv_index} (ideal < 7)\n\n[LLM FUZZY JUDGMENT]\n\nIF 8-10 (EXCELLENT):\n✓ Perfect picnic weather!\n✓ Full day outing OK\n\nIF 6-7 (OKAY, PRECAUTIONS):\n✓ Picnic possible with adjustments\n→ Hot: Pick shaded park, extra water, 2-3 hours max\n→ Rainy: Indoor backup, leave if rain\n→ Windy: Sheltered spot\n→ High UV: Sunscreen, umbrella\n\nIF 4-5 (NOT IDEAL):\n⚠️ Uncomfortable, consider postponing\n→ Consider next day (likely better)\n\nIF 0-3 (NOT A GOOD DAY):\n✗ Don't go for outdoor picnic\n→ Movie, mall, home-based gathering\n→ Reschedule to next day\n\nPRACTICAL TIPS:\n✓ Water: 1L per person min\n✓ Snacks: Light food\n✓ Clothing: Light-colored\n✓ Gear: Umbrella, blanket, sunscreen\n✓ Timing: 9 AM - 5 PM",
+      "llm_prompt": "Given temp {temperature_2m}°C, rain {precipitation_probability}%, wind {wind_speed_10m} km/h, UV {uv_index}, score picnic feasibility 0-10.",
       "traceable_to_api": "temperature_2m, precipitation_probability, wind_speed_10m, uv_index",
       "condition": {
         "fuzzy": true
@@ -321,7 +321,7 @@
       "specificity": 1,
       "regional_context": "Bengaluru monsoon humidity 75-95% worsens period discomfort",
       "why_this_sop": "Women-specific awareness for health and comfort",
-      "advice_template": "You're a woman. Menstrual cycle affects how weather impacts you today.\n\nCYCLE PHASE MATTERS:\n\nPERIOD (Days 1-5):\nFeel 0.5-1\u00b0C colder (body temp dips)\nFatigue: Energy LOW\nHeat sensitivity: Heat feels worse, dehydration faster\nHydration: CRITICAL (bleeding = fluid loss)\nHygiene: Change pads every 3-4 hours\n\nADVICE FOR PERIOD:\n\u2192 Extreme heat (> 38\u00b0C): Reschedule if possible\n\u2192 Hydration: 3L+ daily (vs normal 2L)\n\u2192 Clothing: Black/dark pants\n\u2192 Carry extra pads\n\u2192 Avoid evening rush\n\nPRE-PERIOD (Days 24-28):\nMood: Irritability peaks\nHeat sensitivity: HIGH\nWater retention: Swelling in feet\n\nADVICE FOR PRE-PERIOD:\n\u2192 Extreme heat: Skip outdoors, stay cool\n\u2192 Hydration: 2.5L water\n\u2192 Be kind to yourself\n\nOVULATION (Days 12-16):\nEnergy: PEAK (best time for exercise, sports)\nHeat tolerance: Moderate\nMood: Positive\n\nADVICE FOR OVULATION:\n\u2192 Best time for outdoor exercise\n\u2192 Go for picnic, sports, adventure\n\u2192 Peak energy window\n\nPRACTICAL TIPS:\n\u2713 Track cycle: Use app (Flo, Clue)\n\u2713 Plan activities: Know good vs hard days\n\u2713 Bathroom access: Know locations\n\u2713 Carry: Pads, wipes, extra undergarments",
+      "advice_template": "You're a woman. Menstrual cycle affects how weather impacts you today.\n\nCYCLE PHASE MATTERS:\n\nPERIOD (Days 1-5):\nFeel 0.5-1°C colder (body temp dips)\nFatigue: Energy LOW\nHeat sensitivity: Heat feels worse, dehydration faster\nHydration: CRITICAL (bleeding = fluid loss)\nHygiene: Change pads every 3-4 hours\n\nADVICE FOR PERIOD:\n→ Extreme heat (> 38°C): Reschedule if possible\n→ Hydration: 3L+ daily (vs normal 2L)\n→ Clothing: Black/dark pants\n→ Carry extra pads\n→ Avoid evening rush\n\nPRE-PERIOD (Days 24-28):\nMood: Irritability peaks\nHeat sensitivity: HIGH\nWater retention: Swelling in feet\n\nADVICE FOR PRE-PERIOD:\n→ Extreme heat: Skip outdoors, stay cool\n→ Hydration: 2.5L water\n→ Be kind to yourself\n\nOVULATION (Days 12-16):\nEnergy: PEAK (best time for exercise, sports)\nHeat tolerance: Moderate\nMood: Positive\n\nADVICE FOR OVULATION:\n→ Best time for outdoor exercise\n→ Go for picnic, sports, adventure\n→ Peak energy window\n\nPRACTICAL TIPS:\n✓ Track cycle: Use app (Flo, Clue)\n✓ Plan activities: Know good vs hard days\n✓ Bathroom access: Know locations\n✓ Carry: Pads, wipes, extra undergarments",
       "applies_when": "User indicates they are a woman",
       "traceable_to_api": "temperature_2m, precipitation_probability",
       "condition": {
@@ -366,7 +366,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru monsoon sports (June-Sept): rain, lightning, waterlogged grounds",
       "why_this_sop": "Sports-specific, monsoon-focused practical guidelines",
-      "advice_template": "Monsoon sports safety guidelines for cricket, football, tennis.\n\nWHEN TO CANCEL:\n\u2717 Cancel if: Rain > 50% probability\n\u2717 Cancel if: Active thunderstorm\n\u2717 Cancel if: Waterlogged ground\n\u2717 Cancel if: Heavy winds (> 35 km/h)\n\u2717 Cancel if: Lightning forecast\n\nWHEN TO SHIFT TIMING:\n\u2192 Rain 30-50%: Shift to 6-8 AM (before rain)\n\u2192 Post-rain wet ground: Shift to next day\n\nIF GOING AHEAD:\n\u2713 Equipment: Towels, dry kit, change of clothes\n\u2713 Hydration: Extra water\n\u2713 Medical: First aid kit\n\u2713 Communication: Coach knows weather plan\n\u2713 Players: Know lightning protocol\n\nPRACTICE ADJUSTMENTS:\n\u2713 Shorter duration: 45 min not 90 min\n\u2713 More breaks: Every 20-30 min\n\u2713 Skills not intensity\n\u2713 Avoid high-impact activities\n\nPLAYER SAFETY:\n\u2713 Footwear: Studs work in wet\n\u2713 Extend warm-up in wet\n\u2713 Hydration: Every 15-20 min\n\u2713 Dry off immediately post-practice\n\nLIGHTNING DURING PRACTICE:\n\u2713 Have protocol\n\u2713 < 30 sec to thunder = STOP, indoors immediately\n\u2713 Coach enforces this",
+      "advice_template": "Monsoon sports safety guidelines for cricket, football, tennis.\n\nWHEN TO CANCEL:\n✗ Cancel if: Rain > 50% probability\n✗ Cancel if: Active thunderstorm\n✗ Cancel if: Waterlogged ground\n✗ Cancel if: Heavy winds (> 35 km/h)\n✗ Cancel if: Lightning forecast\n\nWHEN TO SHIFT TIMING:\n→ Rain 30-50%: Shift to 6-8 AM (before rain)\n→ Post-rain wet ground: Shift to next day\n\nIF GOING AHEAD:\n✓ Equipment: Towels, dry kit, change of clothes\n✓ Hydration: Extra water\n✓ Medical: First aid kit\n✓ Communication: Coach knows weather plan\n✓ Players: Know lightning protocol\n\nPRACTICE ADJUSTMENTS:\n✓ Shorter duration: 45 min not 90 min\n✓ More breaks: Every 20-30 min\n✓ Skills not intensity\n✓ Avoid high-impact activities\n\nPLAYER SAFETY:\n✓ Footwear: Studs work in wet\n✓ Extend warm-up in wet\n✓ Hydration: Every 15-20 min\n✓ Dry off immediately post-practice\n\nLIGHTNING DURING PRACTICE:\n✓ Have protocol\n✓ < 30 sec to thunder = STOP, indoors immediately\n✓ Coach enforces this",
       "traceable_to_api": "precipitation_probability, wind_speed_10m, weather_code"
     },
     {
@@ -380,7 +380,7 @@
         "cyclists",
         "athletes"
       ],
-      "description": "Temperature < 5\u00b0C (hypothermia risk for exercise)",
+      "description": "Temperature < 5°C (hypothermia risk for exercise)",
       "condition": {
         "metric": "temperature_2m",
         "op": "<",
@@ -389,9 +389,9 @@
       "severity": 2,
       "severity_name": "medium",
       "specificity": 1,
-      "regional_context": "Bengaluru rarely reaches 5\u00b0C (winter min 10\u00b0C). Relevant for hill stations.",
+      "regional_context": "Bengaluru rarely reaches 5°C (winter min 10°C). Relevant for hill stations.",
       "why_this_sop": "Cold exercise poses hypothermia risk",
-      "advice_template": "Temperature is {temperature_2m}\u00b0C \u2014 cold for outdoor exercise.\n\nCOLD EXERCISE RISKS:\n\u2713 Hypothermia (core body temp drops below 35\u00b0C)\n\u2713 Muscle stiffness (cold = less flexibility)\n\u2713 Breathing difficulty (cold air on lungs)\n\u2713 Frostbite risk if below -5\u00b0C\n\nOUTDOOR EXERCISE ADJUSTMENTS:\n\u2713 Extend warm-up: 15-20 min (muscles need heat)\n\u2713 Shorter duration: 30-45 min max\n\u2713 Buddy system: Never exercise alone in cold\n\u2713 Clothing: 3 layers (thermal base + middle + windproof jacket)\n\u2713 Extremities: Hat, gloves, warm socks\n\u2713 Hydration: Drink anyway (cold makes you forget)\n\u2713 Post-exercise: Warm shower within 30 min\n\nWARNING SIGNS (Hypothermia):\n\u2713 Shivering (early stage)\n\u2713 Confusion, slurred speech\n\u2713 Excessive fatigue\n\u2192 Stop, go indoors, warm up immediately\n\nALTERNATIVES:\n\u2713 Indoor gym\n\u2713 Mall walking (indoors, warm)\n\u2713 Afternoon exercise (warmest time)",
+      "advice_template": "Temperature is {temperature_2m}°C — cold for outdoor exercise.\n\nCOLD EXERCISE RISKS:\n✓ Hypothermia (core body temp drops below 35°C)\n✓ Muscle stiffness (cold = less flexibility)\n✓ Breathing difficulty (cold air on lungs)\n✓ Frostbite risk if below -5°C\n\nOUTDOOR EXERCISE ADJUSTMENTS:\n✓ Extend warm-up: 15-20 min (muscles need heat)\n✓ Shorter duration: 30-45 min max\n✓ Buddy system: Never exercise alone in cold\n✓ Clothing: 3 layers (thermal base + middle + windproof jacket)\n✓ Extremities: Hat, gloves, warm socks\n✓ Hydration: Drink anyway (cold makes you forget)\n✓ Post-exercise: Warm shower within 30 min\n\nWARNING SIGNS (Hypothermia):\n✓ Shivering (early stage)\n✓ Confusion, slurred speech\n✓ Excessive fatigue\n→ Stop, go indoors, warm up immediately\n\nALTERNATIVES:\n✓ Indoor gym\n✓ Mall walking (indoors, warm)\n✓ Afternoon exercise (warmest time)",
       "traceable_to_api": "temperature_2m from /current"
     },
     {
@@ -416,7 +416,7 @@
       "specificity": 3,
       "regional_context": "Jammu, Kashmir, Himachal, Uttarakhand. December-February.",
       "why_this_sop": "Heavy snow blocks roads, travel becomes dangerous",
-      "advice_template": "Heavy snowfall ({snowfall_sum} cm) expected. Roads will be blocked.\n\nIMMEDIATE ACTIONS:\n\u2713 Stock groceries, medications (shops may close 24-48 hours)\n\u2713 Check vehicle fuel (gas stations may not operate)\n\u2713 Don't travel unless absolute emergency\n\nTRAVEL ESSENTIALS if going out:\n\u2713 Carry: Extra blankets, water, high-energy snacks, phone charger\n\u2713 Vehicle prep: Snow chains on tires, spare battery, jump leads\n\u2713 Wear: Insulated jacket, waterproof boots, gloves, hat, scarf\n\u2713 Speed: Drive 10-20 km/h (slow = safe)\n\nHOME PREP:\n\u2713 Heating: Fireplace, heater, warm blankets\n\u2713 Pipe protection: Exposed pipes freeze = burst = no water\n\u2713 Windows: Seal drafts (heat leaks)\n\nELDERLY/KIDS:\n\u2713 Never let them go outside alone\n\u2713 Layer clothing (multiple thin layers > one thick)\n\u2713 Keep indoors, warm drinks every 30 min\n\u2713 Check on neighbors (snow = isolation)\n\nWARNING SIGNS (Hypothermia):\n\u2713 Shivering stops (CRITICAL)\n\u2713 Confusion, slurred speech\n\u2713 Loss of coordination\n\u2192 Get to warmth, call ambulance immediately",
+      "advice_template": "Heavy snowfall ({snowfall_sum} cm) expected. Roads will be blocked.\n\nIMMEDIATE ACTIONS:\n✓ Stock groceries, medications (shops may close 24-48 hours)\n✓ Check vehicle fuel (gas stations may not operate)\n✓ Don't travel unless absolute emergency\n\nTRAVEL ESSENTIALS if going out:\n✓ Carry: Extra blankets, water, high-energy snacks, phone charger\n✓ Vehicle prep: Snow chains on tires, spare battery, jump leads\n✓ Wear: Insulated jacket, waterproof boots, gloves, hat, scarf\n✓ Speed: Drive 10-20 km/h (slow = safe)\n\nHOME PREP:\n✓ Heating: Fireplace, heater, warm blankets\n✓ Pipe protection: Exposed pipes freeze = burst = no water\n✓ Windows: Seal drafts (heat leaks)\n\nELDERLY/KIDS:\n✓ Never let them go outside alone\n✓ Layer clothing (multiple thin layers > one thick)\n✓ Keep indoors, warm drinks every 30 min\n✓ Check on neighbors (snow = isolation)\n\nWARNING SIGNS (Hypothermia):\n✓ Shivering stops (CRITICAL)\n✓ Confusion, slurred speech\n✓ Loss of coordination\n→ Get to warmth, call ambulance immediately",
       "traceable_to_api": "snowfall_sum from /daily (centimetres of snow, NOT precipitation_sum)"
     },
     {
@@ -429,7 +429,7 @@
         "hill_station_residents",
         "outdoor_workers"
       ],
-      "description": "Temperature < -5\u00b0C (frostbite in 15-30 min)",
+      "description": "Temperature < -5°C (frostbite in 15-30 min)",
       "condition": {
         "metric": "temperature_2m",
         "op": "<",
@@ -441,7 +441,7 @@
       "specificity": 2,
       "regional_context": "Shimla, Manali, higher elevations Jan-Feb",
       "why_this_sop": "Severe cold causes rapid frostbite, tissue damage",
-      "advice_template": "Temperature is {temperature_2m}\u00b0C \u2014 severe frostbite risk.\n\nFROSTBITE TIMELINE:\n\u2713 0 to -5\u00b0C: 30-60 min before frostbite\n\u2713 -5 to -15\u00b0C: 10-30 min\n\u2713 Below -15\u00b0C: 5-10 min (CRITICAL)\n\nPROTECTION:\n\u2713 Clothing: 3-4 layers (thermal base \u2192 middle \u2192 windproof jacket)\n\u2713 Extremities: Insulated gloves, wool socks, waterproof boots, face mask/balaclava\n\u2713 Exposed skin: Apply cream/oil (barrier against wind)\n\nOUTDOOR LIMIT:\n\u2713 < -5\u00b0C: Max 20 min continuous\n\u2713 < -10\u00b0C: Max 10 min, then 10 min warmth\n\u2713 < -15\u00b0C: Only 5 min, then must warm up\n\nFROSTBITE RECOGNITION:\n\u2713 Stage 1: Skin pale/white, tingling, loss of sensation\n\u2713 Stage 2: Blistering, severe pain when warming\n\u2713 Stage 3: Black tissue (permanent damage)\n\nTREATMENT:\n\u2713 Move indoors immediately\n\u2713 Warm gradually (NOT rapid = tissue damage)\n\u2713 Warm drink (warm body from inside)\n\u2713 Go to hospital (severe frostbite = amputation risk)",
+      "advice_template": "Temperature is {temperature_2m}°C — severe frostbite risk.\n\nFROSTBITE TIMELINE:\n✓ 0 to -5°C: 30-60 min before frostbite\n✓ -5 to -15°C: 10-30 min\n✓ Below -15°C: 5-10 min (CRITICAL)\n\nPROTECTION:\n✓ Clothing: 3-4 layers (thermal base → middle → windproof jacket)\n✓ Extremities: Insulated gloves, wool socks, waterproof boots, face mask/balaclava\n✓ Exposed skin: Apply cream/oil (barrier against wind)\n\nOUTDOOR LIMIT:\n✓ < -5°C: Max 20 min continuous\n✓ < -10°C: Max 10 min, then 10 min warmth\n✓ < -15°C: Only 5 min, then must warm up\n\nFROSTBITE RECOGNITION:\n✓ Stage 1: Skin pale/white, tingling, loss of sensation\n✓ Stage 2: Blistering, severe pain when warming\n✓ Stage 3: Black tissue (permanent damage)\n\nTREATMENT:\n✓ Move indoors immediately\n✓ Warm gradually (NOT rapid = tissue damage)\n✓ Warm drink (warm body from inside)\n✓ Go to hospital (severe frostbite = amputation risk)",
       "traceable_to_api": "temperature_2m from /current"
     },
     {
@@ -476,7 +476,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru post-monsoon (Oct-Nov), Punjab pre-monsoon (April-May)",
       "why_this_sop": "Dust affects respiratory health, visibility dangerous",
-      "advice_template": "Dust storm detected. Poor visibility, respiratory hazard.\n\nHEALTH RISKS:\n\u2713 Respiratory irritation (coughing, wheezing)\n\u2713 Asthma attacks (worsened)\n\u2713 Allergies (triggered)\n\u2713 Eye irritation (dust in eyes)\n\nWHO SHOULD AVOID OUTDOORS:\n\u2717 Kids (underdeveloped lungs)\n\u2717 Elderly (weak respiratory system)\n\u2717 Asthma/allergy sufferers\n\u2717 Pregnant women (reduced oxygen = fetal stress)\n\nEVERYONE ELSE:\n\u2713 Limit outdoor time\n\u2713 Wear N95 mask if going out\n\u2713 Avoid strenuous activity (exercise = more dust inhalation)\n\nAT HOME:\n\u2713 Keep windows closed\n\u2713 Air purifier (HEPA filter, 6-8 hours/day)\n\u2713 Wet mop floors (traps dust)\n\u2713 Avoid cooking strong spices (irritates respiratory)\n\nCLINGING DUST CLEANUP:\n\u2713 Wet cloth (don't sweep, spreads dust)\n\u2713 Hair wash post-dust (dust accumulates in hair)\n\u2713 Face wash thoroughly\n\nMEDICATIONS:\n\u2713 If asthma: Carry inhaler\n\u2713 If allergies: Take antihistamine",
+      "advice_template": "Dust storm detected. Poor visibility, respiratory hazard.\n\nHEALTH RISKS:\n✓ Respiratory irritation (coughing, wheezing)\n✓ Asthma attacks (worsened)\n✓ Allergies (triggered)\n✓ Eye irritation (dust in eyes)\n\nWHO SHOULD AVOID OUTDOORS:\n✗ Kids (underdeveloped lungs)\n✗ Elderly (weak respiratory system)\n✗ Asthma/allergy sufferers\n✗ Pregnant women (reduced oxygen = fetal stress)\n\nEVERYONE ELSE:\n✓ Limit outdoor time\n✓ Wear N95 mask if going out\n✓ Avoid strenuous activity (exercise = more dust inhalation)\n\nAT HOME:\n✓ Keep windows closed\n✓ Air purifier (HEPA filter, 6-8 hours/day)\n✓ Wet mop floors (traps dust)\n✓ Avoid cooking strong spices (irritates respiratory)\n\nCLINGING DUST CLEANUP:\n✓ Wet cloth (don't sweep, spreads dust)\n✓ Hair wash post-dust (dust accumulates in hair)\n✓ Face wash thoroughly\n\nMEDICATIONS:\n✓ If asthma: Carry inhaler\n✓ If allergies: Take antihistamine",
       "traceable_to_api": "wind_speed_10m, visibility from /current"
     },
     {
@@ -501,7 +501,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru monsoon gusts 40-60 km/h",
       "why_this_sop": "High wind knocks cyclists over, causes accidents",
-      "advice_template": "Wind speed is {wind_speed_10m} km/h \u2014 unsafe for cycling.\n\nWIND CYCLING RISKS:\n\u2713 Gusts can knock you over (loss of control)\n\u2713 Reduced traction (slippery, skidding)\n\u2713 Poor visibility (dust/debris in eyes)\n\u2713 Difficulty balancing\n\nCYCLING IN HIGH WIND:\n\u2717 DO NOT CYCLE TODAY (too risky)\n\nALTERNATIVE TRANSPORT:\n\u2713 4-wheeler (enclosed, stable)\n\u2713 2-wheeler (not ideal, but better grip than cycle)\n\u2713 Public transport (safest)\n\u2713 Walk (only if < 500m)\n\nIF MUST CYCLE (Unavoidable):\n\u2713 Slow down (max 15-20 km/h)\n\u2713 Use wide tires (better grip)\n\u2713 Avoid gusts (come from alleys, stay on open road)\n\u2713 Wear gloves (lose grip = falls)\n\u2713 Avoid loose clothing (wind can catch)\n\u2713 No backpack (changes weight distribution)\n\nWIND + RAIN:\n\u2713 Doubly dangerous (wind + slippery roads)\n\u2713 Do NOT cycle in wind + rain combo",
+      "advice_template": "Wind speed is {wind_speed_10m} km/h — unsafe for cycling.\n\nWIND CYCLING RISKS:\n✓ Gusts can knock you over (loss of control)\n✓ Reduced traction (slippery, skidding)\n✓ Poor visibility (dust/debris in eyes)\n✓ Difficulty balancing\n\nCYCLING IN HIGH WIND:\n✗ DO NOT CYCLE TODAY (too risky)\n\nALTERNATIVE TRANSPORT:\n✓ 4-wheeler (enclosed, stable)\n✓ 2-wheeler (not ideal, but better grip than cycle)\n✓ Public transport (safest)\n✓ Walk (only if < 500m)\n\nIF MUST CYCLE (Unavoidable):\n✓ Slow down (max 15-20 km/h)\n✓ Use wide tires (better grip)\n✓ Avoid gusts (come from alleys, stay on open road)\n✓ Wear gloves (lose grip = falls)\n✓ Avoid loose clothing (wind can catch)\n✓ No backpack (changes weight distribution)\n\nWIND + RAIN:\n✓ Doubly dangerous (wind + slippery roads)\n✓ Do NOT cycle in wind + rain combo",
       "traceable_to_api": "wind_speed_10m from /current"
     },
     {
@@ -526,7 +526,7 @@
       "specificity": 1,
       "regional_context": "Coastal Bengaluru (Coastal Karnataka, if applicable)",
       "why_this_sop": "Wind creates waves, rip tides, unsafe water conditions",
-      "advice_template": "Wind speed is {wind_speed_10m} km/h \u2014 unsafe for water sports.\n\nWATER SPORTS HAZARDS IN WIND:\n\u2713 Increased wave height (dangerous for beginners)\n\u2713 Rip tides (strong currents pulling out to sea)\n\u2713 Difficulty swimming against current\n\u2713 Cold spray (sudden temperature drop)\n\u2713 Visibility: Can't see obstacles/other swimmers\n\nWATER SPORTS IN HIGH WIND:\n\u2717 DO NOT GO TO BEACH TODAY\n\u2717 DO NOT SWIM IN OCEAN TODAY\n\nALTERNATIVES:\n\u2713 Indoor swimming pool (controlled, safe)\n\u2713 Gym workout (alternative to outdoor)\n\nIF SWIMMING DESPITE WARNING:\n\u2713 Buddy system (never alone)\n\u2713 Shallow areas only (max chest depth)\n\u2713 Avoid beach currents\n\u2713 Wear life jacket (mandatory)\n\u2713 Tell lifeguard you're swimming\n\u2713 Exit immediately if waves increase\n\nWIND + CURRENTS:\n\u2713 Most dangerous combo\n\u2713 Current pulls you out, wind prevents return\n\u2713 Avoid at all costs",
+      "advice_template": "Wind speed is {wind_speed_10m} km/h — unsafe for water sports.\n\nWATER SPORTS HAZARDS IN WIND:\n✓ Increased wave height (dangerous for beginners)\n✓ Rip tides (strong currents pulling out to sea)\n✓ Difficulty swimming against current\n✓ Cold spray (sudden temperature drop)\n✓ Visibility: Can't see obstacles/other swimmers\n\nWATER SPORTS IN HIGH WIND:\n✗ DO NOT GO TO BEACH TODAY\n✗ DO NOT SWIM IN OCEAN TODAY\n\nALTERNATIVES:\n✓ Indoor swimming pool (controlled, safe)\n✓ Gym workout (alternative to outdoor)\n\nIF SWIMMING DESPITE WARNING:\n✓ Buddy system (never alone)\n✓ Shallow areas only (max chest depth)\n✓ Avoid beach currents\n✓ Wear life jacket (mandatory)\n✓ Tell lifeguard you're swimming\n✓ Exit immediately if waves increase\n\nWIND + CURRENTS:\n✓ Most dangerous combo\n✓ Current pulls you out, wind prevents return\n✓ Avoid at all costs",
       "traceable_to_api": "wind_speed_10m from /current"
     },
     {
@@ -550,7 +550,7 @@
       "specificity": 1,
       "regional_context": "Bengaluru monsoon extreme wind, cyclone season",
       "why_this_sop": "High wind affects aircraft landing/takeoff",
-      "advice_template": "Wind speed is {wind_speed_10m} km/h \u2014 flight delays likely.\n\nFLIGHT IMPACT:\n\u2713 Delays (pilots wait for wind to reduce)\n\u2713 Cancellations (if wind too strong to land safely)\n\u2713 Diversions (rerouted to safer airport)\n\nBEFORE GOING TO AIRPORT:\n\u2713 Check flight status online (refresh 2 hours before)\n\u2713 Call airline: Confirm flight still operating\n\u2713 Allow extra time (weather delays = airport congestion)\n\nAT AIRPORT:\n\u2713 Check boards frequently (status changes)\n\u2713 Be flexible (flights may be rescheduled)\n\u2713 Keep phone charged (airlines call)\n\u2713 Have backup plans (next flight, next day)\n\nIF FLIGHT DELAYED:\n\u2713 Airline may provide meals (ask)\n\u2713 Ask about rebooking options\n\u2713 Check if eligible for compensation (EU261 rules)\n\u2713 Stay at airport (departure time may change quickly)\n\nIF FLIGHT CANCELLED:\n\u2713 Immediate rebooking (alternative flight/airline)\n\u2713 Hotel if overnight required\n\u2713 Insurance claim (if applicable)",
+      "advice_template": "Wind speed is {wind_speed_10m} km/h — flight delays likely.\n\nFLIGHT IMPACT:\n✓ Delays (pilots wait for wind to reduce)\n✓ Cancellations (if wind too strong to land safely)\n✓ Diversions (rerouted to safer airport)\n\nBEFORE GOING TO AIRPORT:\n✓ Check flight status online (refresh 2 hours before)\n✓ Call airline: Confirm flight still operating\n✓ Allow extra time (weather delays = airport congestion)\n\nAT AIRPORT:\n✓ Check boards frequently (status changes)\n✓ Be flexible (flights may be rescheduled)\n✓ Keep phone charged (airlines call)\n✓ Have backup plans (next flight, next day)\n\nIF FLIGHT DELAYED:\n✓ Airline may provide meals (ask)\n✓ Ask about rebooking options\n✓ Check if eligible for compensation (EU261 rules)\n✓ Stay at airport (departure time may change quickly)\n\nIF FLIGHT CANCELLED:\n✓ Immediate rebooking (alternative flight/airline)\n✓ Hotel if overnight required\n✓ Insurance claim (if applicable)",
       "traceable_to_api": "wind_speed_10m from /current"
     },
     {
@@ -565,7 +565,7 @@
         "caregivers",
         "teachers"
       ],
-      "description": "Temperature > 35\u00b0C (kids dehydrate 3x faster)",
+      "description": "Temperature > 35°C (kids dehydrate 3x faster)",
       "condition": {
         "metric": "temperature_2m",
         "op": ">",
@@ -576,7 +576,7 @@
       "specificity": 1,
       "regional_context": "Bengaluru heat waves April-May, post-monsoon Nov-Dec",
       "why_this_sop": "Kids don't recognize thirst, dehydrate quickly",
-      "advice_template": "Temperature is {temperature_2m}\u00b0C. Kids dehydrate 3x faster than adults.\n\nKID DEHYDRATION RISKS:\n\u2713 Heat exhaustion (weakness, fainting)\n\u2713 Heat stroke (life-threatening)\n\u2713 Cramping (muscles lose electrolytes)\n\u2713 Confusion (brain affected)\n\nHYDRATION (Proactive, not reactive):\n\u2713 Give water every 15 min (not 'when thirsty')\n\u2713 Use colorful water bottle (kids drink more)\n\u2713 Add squash/dilute juice (some refuse plain water)\n\u2713 Sports bottle with straw = easier\n\u2713 Total: 1.5-2L daily\n\nTIMING:\n\u2713 Play only 6-8 AM or 5-7 PM\n\u2713 NO play 11 AM - 4 PM (heat peak)\n\u2713 If school has outdoor games: Talk to teacher, request indoors\n\nCLOTHING:\n\u2713 Light, breathable (polyester sweats, cotton better)\n\u2713 Avoid dark colors (absorb heat)\n\u2713 Shorts + t-shirt okay if shaded\n\u2713 Hat mandatory if any sun\n\nSCHOOL DAY:\n\u2713 Pack 2 bottles (morning + afternoon)\n\u2713 Ask school if AC classrooms available\n\u2713 Pack light snacks (fruit, not heavy)\n\u2713 Inform school if child has heat sensitivity\n\nAT HOME:\n\u2713 Cold water in fridge, offered every 30 min\n\u2713 Limit outdoor time (movies, indoor games)\n\u2713 Cool baths twice a day\n\u2713 Loose PJs at night (heat affects sleep)\n\nWARNING SIGNS:\n\u2713 Unusual quietness (kids get quiet before complaining)\n\u2713 Dry lips, dark urine (dehydration)\n\u2713 Refusal to eat, irritability\n\u2713 Dizziness while playing\n\u2192 STOP activity, get to shade, drink water",
+      "advice_template": "Temperature is {temperature_2m}°C. Kids dehydrate 3x faster than adults.\n\nKID DEHYDRATION RISKS:\n✓ Heat exhaustion (weakness, fainting)\n✓ Heat stroke (life-threatening)\n✓ Cramping (muscles lose electrolytes)\n✓ Confusion (brain affected)\n\nHYDRATION (Proactive, not reactive):\n✓ Give water every 15 min (not 'when thirsty')\n✓ Use colorful water bottle (kids drink more)\n✓ Add squash/dilute juice (some refuse plain water)\n✓ Sports bottle with straw = easier\n✓ Total: 1.5-2L daily\n\nTIMING:\n✓ Play only 6-8 AM or 5-7 PM\n✓ NO play 11 AM - 4 PM (heat peak)\n✓ If school has outdoor games: Talk to teacher, request indoors\n\nCLOTHING:\n✓ Light, breathable (polyester sweats, cotton better)\n✓ Avoid dark colors (absorb heat)\n✓ Shorts + t-shirt okay if shaded\n✓ Hat mandatory if any sun\n\nSCHOOL DAY:\n✓ Pack 2 bottles (morning + afternoon)\n✓ Ask school if AC classrooms available\n✓ Pack light snacks (fruit, not heavy)\n✓ Inform school if child has heat sensitivity\n\nAT HOME:\n✓ Cold water in fridge, offered every 30 min\n✓ Limit outdoor time (movies, indoor games)\n✓ Cool baths twice a day\n✓ Loose PJs at night (heat affects sleep)\n\nWARNING SIGNS:\n✓ Unusual quietness (kids get quiet before complaining)\n✓ Dry lips, dark urine (dehydration)\n✓ Refusal to eat, irritability\n✓ Dizziness while playing\n→ STOP activity, get to shade, drink water",
       "traceable_to_api": "temperature_2m from /current"
     },
     {
@@ -590,7 +590,7 @@
         "dog_owners",
         "cat_owners"
       ],
-      "description": "Temperature > 35\u00b0C (pets overheat faster than humans)",
+      "description": "Temperature > 35°C (pets overheat faster than humans)",
       "condition": {
         "metric": "temperature_2m",
         "op": ">",
@@ -601,7 +601,7 @@
       "specificity": 1,
       "regional_context": "Bengaluru heat waves April-May, monsoon humidity",
       "why_this_sop": "Pets can't regulate temperature like humans",
-      "advice_template": "Temperature is {temperature_2m}\u00b0C. Pets are at heat stress risk.\n\nPET HEAT STRESS:\n\u2713 Dogs' core temp 38-39\u00b0C (higher than humans 37\u00b0C)\n\u2713 In 35\u00b0C+ heat, dogs approach dangerous 40-41\u00b0C\n\u2713 Cats less tolerant than dogs\n\u2713 Overweight pets at higher risk\n\u2713 Short-faced breeds (Bulldogs, Pugs) most at risk\n\nPET SAFETY:\n\u2713 KEEP INDOORS (AC room, cool space)\n\u2713 Provide water constantly (change every 2 hours, heat warms it)\n\u2713 Frozen water bowl (ice keeps it cool longer)\n\u2713 Wet towel in cool corner (pet can lie on it if overheating)\n\u2713 NO walks today (even brief ones dangerous)\n\u2713 NO exercise (wait until evening)\n\nOUTDOOR NECESSITIES (Bathroom only):\n\u2713 Early morning: 5:30-7 AM (coolest)\n\u2713 Late evening: 7-9 PM\n\u2713 Avoid hot pavement (check with hand; if too hot for you, too hot for paws)\n\u2713 Keep walks short (5-10 min max)\n\u2713 Carry water (for drinking)\n\nHOME SETUP:\n\u2713 AC running (pets need AC in heat)\n\u2713 Fans (air circulation)\n\u2713 Shaded windows (block direct sun)\n\u2713 Ventilation: Don't close all windows (ensure airflow)\n\u2713 Hydration: Water bowls in multiple rooms\n\nHEAT STRESS SIGNS:\n\u2713 Excessive panting (not normal)\n\u2713 Drooling\n\u2713 Lethargy (lying down, won't get up)\n\u2713 Reluctance to walk\n\u2713 Vomiting, diarrhea\n\u2713 Collapse (EMERGENCY)\n\nTREATMENT:\n\u2713 Get to cool place immediately\n\u2713 Wet cloth on body (cool gradually, not ice cold)\n\u2713 Offer water (don't force)\n\u2713 Call vet if symptoms persist",
+      "advice_template": "Temperature is {temperature_2m}°C. Pets are at heat stress risk.\n\nPET HEAT STRESS:\n✓ Dogs' core temp 38-39°C (higher than humans 37°C)\n✓ In 35°C+ heat, dogs approach dangerous 40-41°C\n✓ Cats less tolerant than dogs\n✓ Overweight pets at higher risk\n✓ Short-faced breeds (Bulldogs, Pugs) most at risk\n\nPET SAFETY:\n✓ KEEP INDOORS (AC room, cool space)\n✓ Provide water constantly (change every 2 hours, heat warms it)\n✓ Frozen water bowl (ice keeps it cool longer)\n✓ Wet towel in cool corner (pet can lie on it if overheating)\n✓ NO walks today (even brief ones dangerous)\n✓ NO exercise (wait until evening)\n\nOUTDOOR NECESSITIES (Bathroom only):\n✓ Early morning: 5:30-7 AM (coolest)\n✓ Late evening: 7-9 PM\n✓ Avoid hot pavement (check with hand; if too hot for you, too hot for paws)\n✓ Keep walks short (5-10 min max)\n✓ Carry water (for drinking)\n\nHOME SETUP:\n✓ AC running (pets need AC in heat)\n✓ Fans (air circulation)\n✓ Shaded windows (block direct sun)\n✓ Ventilation: Don't close all windows (ensure airflow)\n✓ Hydration: Water bowls in multiple rooms\n\nHEAT STRESS SIGNS:\n✓ Excessive panting (not normal)\n✓ Drooling\n✓ Lethargy (lying down, won't get up)\n✓ Reluctance to walk\n✓ Vomiting, diarrhea\n✓ Collapse (EMERGENCY)\n\nTREATMENT:\n✓ Get to cool place immediately\n✓ Wet cloth on body (cool gradually, not ice cold)\n✓ Offer water (don't force)\n✓ Call vet if symptoms persist",
       "traceable_to_api": "temperature_2m from /current"
     },
     {
@@ -653,7 +653,7 @@
       "specificity": 2,
       "regional_context": "Bengaluru, all seasons",
       "why_this_sop": "Pregnancy changes body's weather tolerance significantly",
-      "advice_template": "You're pregnant. Weather affects pregnancy differently:\n\nHEAT (> 38\u00b0C):\n\u2713 Core temp higher in pregnancy = feels hotter\n\u2713 Hydration: 3-4L water daily\n\u2713 Activity: Slow walks only, max 30 min\n\u2713 Medical: Inform doctor before going out\n\u2713 Warning: Dizziness, cramps, reduced fetal movement = STOP, call doctor\n\nCOLD (< 10\u00b0C):\n\u2713 Wear warm layers (core temp matters for baby)\n\u2713 Avoid slipping (balance already off)\n\u2713 Keep moving (staying still = body loses heat faster)\n\nRAIN:\n\u2713 Avoid slipping (poor balance in pregnancy)\n\u2713 Use handrails/walls\n\u2713 Waterproof shoes with grip\n\u2713 Don't go out if raining heavily\n\nLIGHTNING:\n\u2713 Get indoors immediately\n\u2713 Avoid stress (stress hormones affect fetus)\n\nHUMIDITY (> 80%):\n\u2713 Swelling worse (feet, hands, face)\n\u2713 Heat feels worse (can't cool efficiently)\n\u2713 Stay indoors, AC essential\n\nGENERAL:\n\u2713 Check with doctor: Is today's weather safe for me?\n\u2713 Afternoon rest: 2 hours after lunch\n\u2713 Hydration: Drink before thirst (thirst = dehydrated)\n\u2713 Inform someone: Tell family when going out, ETA back\n\u2713 Fetal monitoring: Know fetal movement pattern\n  - Reduced movement in heat/stress = call doctor",
+      "advice_template": "You're pregnant. Weather affects pregnancy differently:\n\nHEAT (> 38°C):\n✓ Core temp higher in pregnancy = feels hotter\n✓ Hydration: 3-4L water daily\n✓ Activity: Slow walks only, max 30 min\n✓ Medical: Inform doctor before going out\n✓ Warning: Dizziness, cramps, reduced fetal movement = STOP, call doctor\n\nCOLD (< 10°C):\n✓ Wear warm layers (core temp matters for baby)\n✓ Avoid slipping (balance already off)\n✓ Keep moving (staying still = body loses heat faster)\n\nRAIN:\n✓ Avoid slipping (poor balance in pregnancy)\n✓ Use handrails/walls\n✓ Waterproof shoes with grip\n✓ Don't go out if raining heavily\n\nLIGHTNING:\n✓ Get indoors immediately\n✓ Avoid stress (stress hormones affect fetus)\n\nHUMIDITY (> 80%):\n✓ Swelling worse (feet, hands, face)\n✓ Heat feels worse (can't cool efficiently)\n✓ Stay indoors, AC essential\n\nGENERAL:\n✓ Check with doctor: Is today's weather safe for me?\n✓ Afternoon rest: 2 hours after lunch\n✓ Hydration: Drink before thirst (thirst = dehydrated)\n✓ Inform someone: Tell family when going out, ETA back\n✓ Fetal monitoring: Know fetal movement pattern\n  - Reduced movement in heat/stress = call doctor",
       "traceable_to_api": "temperature_2m, humidity from /current"
     },
     {
@@ -736,12 +736,53 @@
       "why_this_sop": "Elderly lose thermoregulation and thirst/cold sensation; kids lose heat faster. A '8 C' plains morning is life-threatening for them, not just uncomfortable.",
       "advice_template": "Temperature is {temperature_2m} C - cold-wave risk for vulnerable people.\nELDERLY (60+):\n- Keep indoors during early morning/late night (coldest hours)\n- Layer clothing; cover head, hands, feet; watch for confusion/slurred speech (hypothermia)\nKIDS:\n- Full layers before school; warm breakfast; no early-morning outdoor play\nHEATING SAFETY:\n- NEVER burn coal/braziers (angithi) in closed rooms - carbon-monoxide deaths are common in cold waves\n- Keep a window slightly open if using any combustion heater",
       "traceable_to_api": "temperature_2m from /current"
+    },
+    {
+      "id": "SOP-026",
+      "name": "Conditions Within Normal Limits",
+      "category": "baseline",
+      "subcategory": "all_clear",
+      "match_type": "numeric",
+      "baseline": true,
+      "applies_to": [
+        "cyclists",
+        "runners",
+        "athletes",
+        "fitness_enthusiasts",
+        "pedestrians",
+        "office_commuters",
+        "commuters",
+        "drivers",
+        "students",
+        "travelers",
+        "families",
+        "social_groups",
+        "outdoor_sports",
+        "cricket_players"
+      ],
+      "description": "No hazard policy triggered, and the user's outdoor activity is one this library covers",
+      "condition": {
+        "always": true
+      },
+      "severity": 1,
+      "severity_name": "low",
+      "specificity": 0,
+      "regional_context": "Applies anywhere. This is the 'nothing is wrong' branch, not a hazard rule.",
+      "why_this_sop": "Without this policy the library can only speak about hazards, so a mild day returned 'I have no guidance for that' -- which reads as broken and is not what the phrase is for. The brief reserves the honest no-match answer for questions no rule covers, not for covered activities in benign weather. This policy keeps the distinction: it fires only when the activity IS one we cover and no hazard policy fired. An activity outside the library still gets the honest no-match.",
+      "advice_template": "GOOD TO GO\n\nNo safety policy in our library is triggered by the current conditions.\n\nLive readings: temperature {temperature_2m} C (feels like {apparent_temperature} C), wind {wind_speed_10m} km/h, chance of rain {precipitation_probability}%, humidity {relative_humidity_2m}%.\n\nStandard precautions still apply:\n- Carry water and stay hydrated\n- Check conditions again before you set out if that is more than an hour away\n- Weather can change quickly; turn back if it does",
+      "traceable_to_api": [
+        "temperature_2m",
+        "apparent_temperature",
+        "wind_speed_10m",
+        "precipitation_probability",
+        "relative_humidity_2m"
+      ]
     }
   ],
   "metadata": {
     "version": "2.0",
     "region": "Bengaluru (Coastal plateau, monsoon-influenced)",
-    "total_sops": 25,
+    "total_sops": 26,
     "categories": [
       "travel",
       "outdoor_exercise",
