@@ -8,25 +8,35 @@ The model composes language. It does not decide facts, and it does not decide wh
 
 ## Setup
 
-Python 3.10+.
+**Requirements:** Python 3.12+ ([download](https://www.python.org/downloads/))
 
 ```bash
+# Clone the repo
+git clone https://github.com/sriram320/CHATBOT_WEATHER.git
+cd CHATBOT_WEATHER
+
+# Create virtual environment
 python -m venv .venv
-source .venv/Scripts/activate          # macOS/Linux: source .venv/bin/activate
+source .venv/Scripts/activate          # Windows: .venv\Scripts\activate
+                                       # macOS/Linux: source .venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 
-cp .env.example .env                   # then put your key in it
+# Set up environment variables
+cp .env.example .env
+# Edit .env and add your NVIDIA_API_KEY
 ```
 
-`.env`:
+`.env` (get your key from [NVIDIA NIM](https://build.nvidia.com/nvidia/nemotron-3-super-120b)):
 ```
 NVIDIA_API_KEY=nvapi-...
 ```
 
-**Run the web app** (backend serves the chat frontend — one process, one port):
+**Run the web app** (serves frontend + API on one port):
 ```bash
-uvicorn main:app --reload
-# open http://localhost:8000
+python main.py
+# Open http://127.0.0.1:8000 in your browser
 ```
 
 **Run the graph directly** (prints the full node trace — useful for seeing the decision path):
