@@ -33,11 +33,20 @@ cp .env.example .env
 NVIDIA_API_KEY=nvapi-...
 ```
 
-**Run the web app** (serves frontend + API on one port):
+**Run the app** (Streamlit — this is the deployed front end):
 ```bash
-python main.py
-# Open http://127.0.0.1:8000 in your browser
+streamlit run streamlit_app.py
+# Opens http://localhost:8501
 ```
+
+**Or run the FastAPI version** (same engine, HTML/JS front end):
+```bash
+uvicorn main:app --reload
+# Open http://127.0.0.1:8000
+```
+
+Both entry points call the identical graph. `streamlit_app.py` and `main.py` are
+view layers only — no policy logic lives in either, so the answers cannot differ.
 
 **Run the graph directly** (prints the full node trace — useful for seeing the decision path):
 ```bash
