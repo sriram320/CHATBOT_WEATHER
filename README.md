@@ -1,6 +1,6 @@
 # Weather Advisory Bot
 
-A LangGraph agent that answers outdoor-safety questions ("is it safe to cycle in Bhopal today?") by combining **live Open-Meteo data** with a **library of 25 written policies (SOPs)**.
+A LangGraph agent that answers outdoor-safety questions ("is it safe to cycle in Bhopal today?") by combining **live Open-Meteo data** with a **library of 32 written policies (SOPs)**.
 
 The model composes language. It does not decide facts, and it does not decide which policy applies.
 
@@ -51,7 +51,7 @@ user_question
   → geocode_location          (Open-Meteo geocoding, alias + candidate ranking)
   → fetch_weather             (Open-Meteo forecast, fixed broad variable set)
        ├─ geocode_error / weather_error → error_node → return_response
-  → evaluate_deterministic_sops   (PURE PYTHON: generic evaluator over all 26 SOPs)
+  → evaluate_deterministic_sops   (PURE PYTHON: generic evaluator over all 32 SOPs)
        ├─ needs_fuzzy_check? → fuzzy_check_node (LLM, closed list) ─┐
        └─ else ──────────────────────────────────────────────────────┤
   → filter_by_audience        (PURE PYTHON: is this policy addressed to THIS reader?)
@@ -73,7 +73,7 @@ The model is used at exactly three points:
 | Step | Model's role | Constraint |
 |---|---|---|
 | `intent_and_slots` | extract activity / location / time_frame from free text | JSON only; never invents a city |
-| `fuzzy_check_node` | judge the 2 fuzzy policies (picnic, women's health) | must answer with one of `good` / `possible_with_caution` / `not_recommended` |
+| `fuzzy_check_node` | judge the one genuinely non-numeric policy (SOP-011, women's health) | must answer with one of `good` / `possible_with_caution` / `not_recommended` |
 | `compose_response` | turn the top-3 policies into readable prose | may only cite numbers from a supplied whitelist |
 
 **Which SOP applies is never a model decision.** Whether a hazard exists is decided in `utils/evaluator.py` against the numbers Open-Meteo returned; whether that policy is addressed to this reader is decided in `utils/audience.py`. Both are pure Python.
@@ -84,7 +84,9 @@ That boundary is also the security story. A user's text only reaches the model a
 
 ## Policies as data
 
-26 SOPs in `sops_final_25.json`, across 11 categories (travel, outdoor_exercise, vulnerable_groups, weather_alert, leisure, health_wellness, sports, air_quality, cold_weather, winter_travel, baseline), severity 1–4, including two fuzzy policies with no threshold to check.
+32 SOPs in `sops.json`, across 10 categories (travel, outdoor_exercise, vulnerable_groups, weather_alert, leisure, health_wellness, sports, air_quality, cold_weather, winter_travel), severity 1–4.
+
+Coverage runs from everyday commuting and outdoor exercise through vulnerable groups (elderly, children, pets, pregnancy), severe weather, occupational heat for outdoor manual workers, gig delivery riders, school outdoor activities and long-distance road travel. `metadata` in the file is generated from the policies themselves rather than hand-maintained, so it cannot drift out of sync with them.
 
 Every condition uses one grammar, interpreted by one evaluator:
 
@@ -99,7 +101,7 @@ compound : {"all_of": [...]}  {"any_of": [...]}  {"not": ...}  {"always": bool} 
 "SOP-023": {"metric": "weather_code", "op": "in", "value": [96, 99]}
 ```
 
-**Adding a 27th policy is a JSON edit, nothing else.** `utils/evaluator.py` has no per-policy branches, and `load_sops()` deliberately re-reads the file on every request rather than caching it — so a policy added mid-conversation takes effect on the very next question, no restart. That's the "add an SOP live" requirement.
+**Adding a 33rd policy is a JSON edit, nothing else.** `utils/evaluator.py` has no per-policy branches, and `load_sops()` deliberately re-reads the file on every request rather than caching it — so a policy added mid-conversation takes effect on the very next question, no restart. That's the "add an SOP live" requirement.
 
 **Ranking:** `(severity DESC, specificity DESC)`. Severity leads because it's a safety signal; specificity only breaks ties between equally serious policies, so a narrowly-scoped medium rule can never outrank a broad severe one. With a severe-weather system active, SOP-008 leads the answer regardless of what activity was asked about — which is the behaviour the brief asks for.
 
@@ -107,15 +109,19 @@ compound : {"all_of": [...]}  {"any_of": [...]}  {"not": ...}  {"always": bool} 
 
 A hazard-only library can only ever speak about hazards, so a pleasant day returned *"I don't have guidance for that"* — which reads as broken, and isn't what that sentence is for. The brief reserves the honest no-match for **questions no rule covers**, not for covered activities in benign weather.
 
-SOP-026 restores the distinction. It is marked `"baseline": true` in the JSON, and `resolve_and_rank` applies one general rule: **a baseline policy yields to any real hazard policy, and only speaks for an activity the library actually covers.** So:
+**SOP-029 (Benign Conditions)** restores the distinction. It is marked `"baseline": true`, and `resolve_and_rank` applies one general rule: **a baseline policy yields to any real hazard policy, and only speaks for an activity the library actually covers.** So:
 
 | Situation | Answer |
 |---|---|
-| Mild weather, **covered** activity (cycling) | SOP-026 all-clear, with live numbers |
+| Mild weather, **covered** activity (cycling) | SOP-029 all-clear, with live numbers |
 | Mild weather, **uncovered** activity (reading indoors) | honest no-match, model never called |
 | Any hazard policy fires | baseline drops out entirely |
 
-The rule is about the `baseline` flag, not about SOP-026, so a second baseline policy would need no code change. Eval case 13 asserts both halves, because the risk here is precisely that they collapse into each other.
+The rule keys off the `baseline` flag, not a policy id, so **SOP-010 (picnic) carries it too** — it reports *favourable* conditions rather than a hazard, and the two failure directions are not symmetric: withholding a hazard warning is dangerous, withholding an unasked-for picnic suggestion costs nothing.
+
+The flag also prevents a subtler bug. Low severity alone would keep the all-clear out of the *lead* position, but not out of the top 3 — and dense fog can co-occur with otherwise benign readings, so the same answer could have carried "visibility 400 m, travel is hazardous" and "no significant weather hazard". Being a baseline drops it entirely instead.
+
+Eval case 13 asserts both halves, because the risk here is precisely that they collapse into each other.
 
 ---
 
@@ -185,7 +191,7 @@ Every answer carries a **per-claim provenance trail** in `audit_trail.grounding.
 85.0%    ← live API: precipitation_probability=85
 70.0%    ← policy threshold (a fired SOP's trigger value)
 11.2km/h ← live API: wind_speed_10m=11.2
-35.0km/h ← policy advice text (written in sops_final_25.json)
+35.0km/h ← policy advice text (written in sops.json)
 14.2c    ← live API: apparent_temperature=14.2
 ```
 
@@ -241,9 +247,9 @@ Cases 11–13 exist because each one is a bug that actually shipped and was caug
 | 8 | Adversarial — injection + fake `SOP-999` | injection can't change selection; fake ID never cited | PASS — real wind policy still fired, SOP-999 absent |
 | 9 | Grounding guarantee — fabricated numbers | validator fed 72 km/h (API: 38) and 20% (API: 95%) | PASS — both flagged |
 | 10 | Session memory | follow-up with no city or activity named | PASS — carried Bengaluru + cycling, time frame updated |
-| 11 | **Audience gating** | SOP-022 (pregnant_women) matches this weather — must be withheld for a generic user, shown for a pregnant one | PASS — generic `[SOP-012, SOP-001]` + withheld `[SOP-022]`; pregnant `[SOP-012, SOP-022, SOP-001]` |
+| 11 | **Audience gating** | SOP-022 (pregnant_women) matches this weather — must be withheld for a generic user, shown for a pregnant one | PASS — generic `[SOP-026, SOP-012, SOP-001]` + withheld `[SOP-022, SOP-031, SOP-032]`; pregnant `[SOP-026, SOP-012, SOP-022]` |
 | 12 | **Location resolution** | Bangalore/Bombay/London/Delhi must land in the right country | PASS — Bengaluru IN, Mumbai IN, London UK, Delhi IN |
-| 13 | **Baseline vs honest no-match** | mild+covered → grounded all-clear; mild+uncovered → honest no-match | PASS — `[SOP-026]` with 0 violations; uncovered returns none |
+| 13 | **Baseline vs honest no-match** | mild+covered → grounded all-clear; mild+uncovered → honest no-match | PASS — `[SOP-029]` with 0 violations; uncovered returns none |
 
 ### Honest note on the live case
 
@@ -264,6 +270,8 @@ A suite that only goes green during a storm breaks every other week. So the spli
 - **Provenance attribution uses a 0.6 tolerance**, so two metrics within 0.6 of each other are disambiguated by closest match — correct in practice, but a genuinely ambiguous tie would pick one.
 - **Session state is in-process memory**, so it doesn't survive a restart and won't work across multiple server workers. The profile lives in the same dict and is never written to disk.
 - **The city alias table is a hand-maintained list.** It covers the renamings people actually type; an unlisted one still resolves by candidate ranking, which is better than `[0]` but not a guarantee. A geocoder with proper alternate-name support would remove the table entirely.
+- **With 32 policies the top 3 is genuinely crowded.** Broad high-severity rules (SOP-026 commute, SOP-028 delays) fire on many questions and can crowd out a narrower but more relevant policy. Severity-then-specificity ranking is the stated rule and it is applied honestly, but a relevance term — how well the policy's audience matches this reader — would order these better than severity alone.
+- **SOP-027 (long-distance road travel) can fire for a short drive.** Nothing in the question distinguishes "driving 5 km to the office" from "driving 300 km tomorrow", so a rainy commute by car may pick up trip-planning advice. Over-inclusive rather than wrong, and a deliberate consequence of the activity tier failing open.
 - **Audience signals come from regex, not the model.** That's deliberate — deterministic and inspectable — but it means unusual phrasing ("my missus is expecting") may not register. The profile panel is the reliable path; the regex is the convenience.
 - **Audience gating can withhold a policy someone wanted.** A grandparent asking on their own behalf without saying so gets the general cold-weather policy, not the elderly-specific one. Withheld policies and the reason are always shown in the audit panel, so the decision is visible rather than silent.
 - **Pregnancy, age and gender are sensitive fields.** They're optional, never persisted, session-scoped, and used only to decide which policies apply. A production version would need an explicit consent and retention story.

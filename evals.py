@@ -332,13 +332,13 @@ def case_13_baseline_vs_honest_no_match():
     covered = run("Is it safe to cycle today?", mild)
     uncovered = run("Is it safe to read a book indoors?", mild)
 
-    ok = (ids_in(covered) == ["SOP-026"]
+    ok = (ids_in(covered) == ["SOP-029"]
           and not ids_in(uncovered)
           and not grounding.validate_grounding(
               covered.get("final_response", ""), mild, covered.get("top_3_sops", [])))
     record(
         "13. Baseline policy vs honest no-match",
-        "mild weather + covered activity -> grounded all-clear (SOP-026); mild weather + uncovered activity -> honest no-match",
+        "mild weather + covered activity -> grounded all-clear (SOP-029); mild weather + uncovered activity -> honest no-match",
         "the all-clear fires only for activities the library covers, so 'I don't have guidance' keeps meaning what the brief intends",
         ok,
         f"covered top_3={ids_in(covered)} | uncovered top_3={ids_in(uncovered) or 'none (honest no-match)'} | "

@@ -18,7 +18,7 @@ LAYER B (for the synthesis step, which is free-form)
 
 Why thresholds are allowed alongside API values: several policies quote their
 own trigger in their advice ("DO NOT CYCLE in 70%+ rain"). That 70 is ours --
-it comes from sops_final_25.json, not from the model's imagination -- so
+it comes from sops.json, not from the model's imagination -- so
 checking it against the API would produce a false violation. Both sources are
 reported separately in the audit trail so a reviewer can always tell which
 number came from where.
@@ -152,7 +152,7 @@ def trace_claims(text: str, weather_data: dict, matched_sops: list[dict] | None 
             if entry["source"] is None and any(abs(value - t) <= tol for t in permitted["thresholds"]):
                 entry["source"] = "policy threshold (a fired SOP's trigger value)"
             if entry["source"] is None and any(abs(value - p) <= tol for p in permitted["policy_text"]):
-                entry["source"] = "policy advice text (written in sops_final_25.json)"
+                entry["source"] = "policy advice text (written in sops.json)"
 
         traced.append(entry)
     return traced

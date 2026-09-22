@@ -37,8 +37,11 @@ from utils.weather import fetch_weather as do_fetch_weather
 
 VERBOSE = True
 
+# SOP-010 (picnic) used to live here. It now carries a real threshold condition
+# in the JSON, so it is matched deterministically like any other policy and the
+# model is no longer asked to judge it. SOP-011 is the remaining genuinely
+# non-numeric policy.
 FUZZY_ACTIVITY_HINTS = {
-    "SOP-010": ["picnic", "leisure", "outing", "gathering", "park", "gettogether", "get-together", "barbecue", "bbq"],
     "SOP-011": ["period", "menstrual", "menstruation", "cramps", "pms", "womens_health"],
 }
 

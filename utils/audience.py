@@ -1,6 +1,6 @@
 """Audience gating: does this policy apply to THIS person?
 
-Every SOP in sops_final_25.json already declares who it is written for, in its
+Every SOP in sops.json already declares who it is written for, in its
 `applies_to` field (['pregnant_women'], ['pet_owners'], ['cyclists'], ...).
 Until this module existed nothing read that field, so policies matched purely
 on weather and fired at whoever was asking. A generic cyclist in Aberdeen was
@@ -49,13 +49,24 @@ IDENTITY_TAGS = {
     "outdoor_workers": {"outdoor_worker"},
     "hill_station_residents": {"hill_station"},
     "farmers": {"farmer"},
+    # Occupational identity: a job is something you are, not something you
+    # happen to be doing this afternoon, so these fail closed like the rest.
+    "construction_workers": {"outdoor_worker", "construction_worker"},
+    "street_vendors": {"outdoor_worker", "street_vendor"},
+    "delivery_workers": {"outdoor_worker", "delivery_worker"},
+    "gig_workers": {"delivery_worker", "gig_worker"},
+    "schools": {"kids", "school_staff"},
 }
 
 # Activity tags -> keywords that indicate the reader is doing that thing.
 ACTIVITY_TAGS = {
-    "cyclists": {"cycl", "bike", "biking", "bicycle", "two wheeler", "two-wheeler", "scooter"},
-    "motorcyclists": {"motorcycl", "motorbike", "bike", "scooter", "two wheeler", "two-wheeler"},
-    "two_wheeler_riders": {"two wheeler", "two-wheeler", "scooter", "motorcycl", "cycl", "bike"},
+    # A "two-wheeler" in Indian usage is a motorcycle or scooter, NOT a bicycle.
+    # Conflating them made the gig-delivery-rider policy fire at every ordinary
+    # cyclist, and at severity 3 it pushed genuinely relevant policies out of
+    # the top 3. Pedal words belong to `cyclists` only.
+    "cyclists": {"cycl", "bike", "biking", "bicycle"},
+    "motorcyclists": {"motorcycl", "motorbike", "scooter", "two wheeler", "two-wheeler"},
+    "two_wheeler_riders": {"two wheeler", "two-wheeler", "scooter", "motorcycl", "motorbike"},
     "runners": {"run", "jog", "marathon"},
     "athletes": {"athlet", "sport", "training", "practice", "run", "cycl", "cricket", "football"},
     "fitness_enthusiasts": {"workout", "exercise", "gym", "fitness", "run", "cycl"},
@@ -87,7 +98,12 @@ _QUESTION_IDENTITY_PATTERNS = {
     "elderly": r"\belder|\bsenior|\bgrandmother\b|\bgrandfather\b|\bgranny\b|\bold(er)? (parent|father|mother)",
     "pets": r"\bdog\b|\bpuppy\b|\bcat\b|\bpet\b",
     "family": r"\bfamily\b|\bfamilies\b",
-    "outdoor_worker": r"\boutdoor work|\bconstruction\b|\bfield work",
+    "outdoor_worker": r"\boutdoor work|\bconstruction\b|\bfield work|\blabour\b|\blabor\b|\bsite work",
+    "construction_worker": r"\bconstruction\b|\bbuilding site\b|\bmason\b",
+    "street_vendor": r"\bstreet vendor\b|\bhawker\b|\broadside stall\b",
+    "delivery_worker": r"\bdeliver\w*\b|\bswiggy\b|\bzomato\b|\bzepto\b|\bblinkit\b|\bcourier\b|\bparcel\b",
+    "gig_worker": r"\bgig work|\brider\b|\bgig worker\b",
+    "school_staff": r"\bschool\b|\bassembly\b|\bsports day\b|\bPE class\b|\bteacher\b|\bprincipal\b",
     "farmer": r"\bfarm|\bcrop\b|\bharvest\b",
 }
 

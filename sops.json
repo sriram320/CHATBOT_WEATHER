@@ -285,25 +285,51 @@
       "name": "Picnic Feasibility Assessment",
       "category": "leisure",
       "subcategory": "outdoor_family_activities",
-      "match_type": "fuzzy",
+      "match_type": "situational",
       "applies_to": [
         "families",
         "kids",
         "social_groups"
       ],
-      "description": "Holistic judgment on picnic suitability",
-      "semantic_hint": "Consider: temp ideal 20-30°C, rain ideal < 30%, wind ideal < 20 km/h, UV ideal < 7. If 1-2 factors mildly bad but others good = okay with precautions. If 3+ factors bad = not a good day.",
+      "description": "Pleasant conditions suitable for an outdoor picnic",
+      "semantic_hint": "Consider: temp ideal 20-30C, rain ideal < 30%, wind ideal < 20 km/h, UV ideal < 7. If 1-2 factors mildly bad but others good = okay with precautions. If 3+ factors bad = not a good day.",
       "severity": 1,
       "severity_name": "low",
-      "specificity": 0,
+      "specificity": 1,
       "regional_context": "Bengaluru post-monsoon (late Sept onwards) best picnic weather",
-      "why_this_sop": "Fuzzy SOP showing non-numeric scenario handling",
-      "advice_template": "Is today good for a picnic? Let me weigh the weather factors:\n\nWHAT MAKES A GOOD PICNIC DAY:\n✓ Temperature: 20-30°C (comfortable)\n✓ Rain: < 30% (mostly dry)\n✓ Wind: < 20 km/h (not blowing food)\n✓ UV: < 7 (won't burn)\n✓ Overall: Pleasant\n\nMY ASSESSMENT:\nTemp: {temperature_2m}°C (ideal 20-30°C)\nRain: {precipitation_probability}% (ideal < 30%)\nWind: {wind_speed_10m} km/h (ideal < 20)\nUV: {uv_index} (ideal < 7)\n\n[LLM FUZZY JUDGMENT]\n\nIF 8-10 (EXCELLENT):\n✓ Perfect picnic weather!\n✓ Full day outing OK\n\nIF 6-7 (OKAY, PRECAUTIONS):\n✓ Picnic possible with adjustments\n→ Hot: Pick shaded park, extra water, 2-3 hours max\n→ Rainy: Indoor backup, leave if rain\n→ Windy: Sheltered spot\n→ High UV: Sunscreen, umbrella\n\nIF 4-5 (NOT IDEAL):\n⚠️ Uncomfortable, consider postponing\n→ Consider next day (likely better)\n\nIF 0-3 (NOT A GOOD DAY):\n✗ Don't go for outdoor picnic\n→ Movie, mall, home-based gathering\n→ Reschedule to next day\n\nPRACTICAL TIPS:\n✓ Water: 1L per person min\n✓ Snacks: Light food\n✓ Clothing: Light-colored\n✓ Gear: Umbrella, blanket, sunscreen\n✓ Timing: 9 AM - 5 PM",
-      "llm_prompt": "Given temp {temperature_2m}°C, rain {precipitation_probability}%, wind {wind_speed_10m} km/h, UV {uv_index}, score picnic feasibility 0-10.",
-      "traceable_to_api": "temperature_2m, precipitation_probability, wind_speed_10m, uv_index",
+      "why_this_sop": "Picnic suitability is expressible as a weather rule, so it is written policy, not a model guess. Marked baseline because it reports FAVOURABLE conditions rather than a hazard: it must yield to any real hazard policy, and it must not be shown to someone who never indicated an outing. Withholding a hazard warning is dangerous; withholding an unasked-for picnic suggestion costs nothing.",
+      "advice_template": "Good conditions for a picnic. Temperature {temperature_2m} C, rain chance {precipitation_probability}%, wind {wind_speed_10m} km/h, UV {uv_index}.\n- Comfortable for an outdoor gathering\n- Bring: sunscreen (SPF 30+), water, a hat, light layers\n- Best slots: 8-11 AM or after 4 PM to avoid peak sun\n- No significant weather concerns right now",
+      "traceable_to_api": "precipitation_probability, temperature_2m, wind_speed_10m, uv_index from /current",
       "condition": {
-        "fuzzy": true
-      }
+        "all_of": [
+          {
+            "metric": "precipitation_probability",
+            "op": "<",
+            "value": 30
+          },
+          {
+            "metric": "temperature_2m",
+            "op": ">",
+            "value": 15
+          },
+          {
+            "metric": "temperature_2m",
+            "op": "<",
+            "value": 35
+          },
+          {
+            "metric": "wind_speed_10m",
+            "op": "<",
+            "value": 25
+          },
+          {
+            "metric": "uv_index",
+            "op": "<",
+            "value": 8
+          }
+        ]
+      },
+      "baseline": true
     },
     {
       "id": "SOP-011",
@@ -739,10 +765,159 @@
     },
     {
       "id": "SOP-026",
-      "name": "Conditions Within Normal Limits",
-      "category": "baseline",
+      "name": "Commute Journey Safety",
+      "category": "travel",
+      "subcategory": "daily_commute",
+      "match_type": "situational",
+      "applies_to": [
+        "commuters",
+        "office_commuters",
+        "students",
+        "all"
+      ],
+      "description": "Weather hazard affecting the journey to work/school/office",
+      "condition": {
+        "any_of": [
+          {
+            "metric": "precipitation_probability",
+            "op": ">=",
+            "value": 60
+          },
+          {
+            "metric": "wind_speed_10m",
+            "op": ">=",
+            "value": 30
+          },
+          {
+            "metric": "visibility",
+            "op": "<",
+            "value": 1000
+          },
+          {
+            "metric": "temperature_2m",
+            "op": ">",
+            "value": 38
+          },
+          {
+            "metric": "weather_code",
+            "op": "in",
+            "value": [
+              80,
+              81,
+              82,
+              95,
+              96,
+              99
+            ]
+          }
+        ]
+      },
+      "severity": 3,
+      "severity_name": "high",
+      "specificity": 2,
+      "regional_context": "All regions. 'Should I go to office/school today?' is really a question about the OUTDOOR journey, even when the destination is indoors.",
+      "why_this_sop": "The destination may be indoors, but getting there is outdoors. A commute in heavy rain, storm, low visibility or extreme heat carries real risk that a written rule must cover.",
+      "advice_template": "Your commute may be affected. Now: {temperature_2m} C, rain {precipitation_probability}%, wind {wind_speed_10m} km/h, visibility {visibility} m.\n- Leave 30-45 min earlier than usual\n- Prefer public transport (bus/metro) over a two-wheeler or cycle\n- If driving: slow to 30-40 km/h, low-beam headlights, keep a large gap\n- Do NOT cycle or ride a two-wheeler in a storm or heavy rain\n- Tell your office/school you may be late",
+      "traceable_to_api": "temperature_2m, precipitation_probability, wind_speed_10m, visibility, weather_code from /current"
+    },
+    {
+      "id": "SOP-027",
+      "name": "Long-Distance Road Travel Safety",
+      "category": "travel",
+      "subcategory": "intercity_travel",
+      "match_type": "situational",
+      "applies_to": [
+        "drivers",
+        "travelers",
+        "families"
+      ],
+      "description": "Extended (inter-city) road journey in hazardous weather",
+      "condition": {
+        "any_of": [
+          {
+            "metric": "precipitation_sum",
+            "op": ">",
+            "value": 20
+          },
+          {
+            "metric": "wind_speed_10m",
+            "op": ">=",
+            "value": 40
+          },
+          {
+            "metric": "visibility",
+            "op": "<",
+            "value": 800
+          },
+          {
+            "metric": "snowfall_sum",
+            "op": ">",
+            "value": 5
+          },
+          {
+            "metric": "weather_code",
+            "op": "in",
+            "value": [
+              95,
+              96,
+              99
+            ]
+          }
+        ]
+      },
+      "severity": 3,
+      "severity_name": "high",
+      "specificity": 2,
+      "regional_context": "Highways and hill roads. Heavy day-rainfall, snow on hill routes, or thunderstorms make long drives dangerous and hard to abort mid-way.",
+      "why_this_sop": "A long trip cannot be abandoned easily once begun; the decision to set out must account for the whole day's weather, not just the current minute.",
+      "advice_template": "Long road trip looks risky. Today: rain {precipitation_sum} mm, wind {wind_speed_10m} km/h, visibility {visibility} m, snow {snowfall_sum} cm.\n- Delay if you can (wait for the system to pass)\n- If you must go: share your route and ETA with someone\n- Carry water, a charged phone + power bank, basic emergency kit\n- Drive slower than usual, take a break every ~100 km\n- Avoid night driving in these conditions",
+      "traceable_to_api": "precipitation_sum, snowfall_sum from /daily; wind_speed_10m, visibility, weather_code from /current"
+    },
+    {
+      "id": "SOP-028",
+      "name": "Minor Travel Delay Advisory",
+      "category": "travel",
+      "subcategory": "delay_risk",
+      "match_type": "situational",
+      "applies_to": [
+        "all",
+        "commuters",
+        "travelers"
+      ],
+      "description": "Mild conditions likely to cause delays but not immediate danger",
+      "condition": {
+        "any_of": [
+          {
+            "metric": "precipitation_probability",
+            "op": ">=",
+            "value": 50
+          },
+          {
+            "metric": "wind_speed_10m",
+            "op": ">=",
+            "value": 25
+          },
+          {
+            "metric": "temperature_2m",
+            "op": ">",
+            "value": 35
+          }
+        ]
+      },
+      "severity": 2,
+      "severity_name": "medium",
+      "specificity": 1,
+      "regional_context": "The everyday 'it might rain / it's warm' case. Deliberately lower thresholds than SOP-026 so the high-severity commute rule wins when it also fires.",
+      "why_this_sop": "Not every bad-weather commute is dangerous; many just need a little buffer. A separate, lower-severity rule avoids over-warning.",
+      "advice_template": "Expect some delays. Now: {temperature_2m} C, rain {precipitation_probability}%, wind {wind_speed_10m} km/h.\n- Leave 20-30 min earlier\n- Carry an umbrella and water\n- Check traffic/transit before you leave\n- Let people know you might be a bit late",
+      "traceable_to_api": "temperature_2m, precipitation_probability, wind_speed_10m from /current"
+    },
+    {
+      "id": "SOP-029",
+      "name": "Benign Conditions - No Weather Hazard",
+      "category": "weather_alert",
       "subcategory": "all_clear",
-      "match_type": "numeric",
+      "match_type": "situational",
       "baseline": true,
       "applies_to": [
         "cyclists",
@@ -758,59 +933,240 @@
         "families",
         "social_groups",
         "outdoor_sports",
-        "cricket_players"
+        "cricket_players",
+        "swimmers",
+        "two_wheeler_riders",
+        "motorcyclists",
+        "air_travelers"
       ],
-      "description": "No hazard policy triggered, and the user's outdoor activity is one this library covers",
+      "description": "No significant weather hazard; normal outdoor precautions apply",
       "condition": {
-        "always": true
+        "all_of": [
+          {
+            "metric": "precipitation_probability",
+            "op": "<",
+            "value": 30
+          },
+          {
+            "metric": "temperature_2m",
+            "op": ">",
+            "value": 12
+          },
+          {
+            "metric": "temperature_2m",
+            "op": "<",
+            "value": 35
+          },
+          {
+            "metric": "wind_speed_10m",
+            "op": "<",
+            "value": 25
+          },
+          {
+            "metric": "uv_index",
+            "op": "<",
+            "value": 8
+          },
+          {
+            "not": {
+              "metric": "weather_code",
+              "op": "in",
+              "value": [
+                80,
+                81,
+                82,
+                95,
+                96,
+                99
+              ]
+            }
+          }
+        ]
       },
       "severity": 1,
       "severity_name": "low",
-      "specificity": 0,
-      "regional_context": "Applies anywhere. This is the 'nothing is wrong' branch, not a hazard rule.",
-      "why_this_sop": "Without this policy the library can only speak about hazards, so a mild day returned 'I have no guidance for that' -- which reads as broken and is not what the phrase is for. The brief reserves the honest no-match answer for questions no rule covers, not for covered activities in benign weather. This policy keeps the distinction: it fires only when the activity IS one we cover and no hazard policy fired. An activity outside the library still gets the honest no-match.",
-      "advice_template": "GOOD TO GO\n\nNo safety policy in our library is triggered by the current conditions.\n\nLive readings: temperature {temperature_2m} C (feels like {apparent_temperature} C), wind {wind_speed_10m} km/h, chance of rain {precipitation_probability}%, humidity {relative_humidity_2m}%.\n\nStandard precautions still apply:\n- Carry water and stay hydrated\n- Check conditions again before you set out if that is more than an hour away\n- Weather can change quickly; turn back if it does",
-      "traceable_to_api": [
-        "temperature_2m",
-        "apparent_temperature",
-        "wind_speed_10m",
-        "precipitation_probability",
-        "relative_humidity_2m"
-      ]
+      "specificity": 1,
+      "regional_context": "Fires on a genuinely pleasant day. Marked `baseline`, so it is dropped entirely whenever any hazard policy fires -- low severity alone would keep it out of the LEAD position but still let it appear as a contradictory secondary (e.g. alongside dense fog, which can co-occur with otherwise benign readings).",
+      "why_this_sop": "So the bot gives a useful, policy-backed 'no weather concerns right now' instead of an unhelpful 'no guidance' on a clear day. Scoped strictly to WEATHER - it does not claim any activity is inherently safe. Its audience list is outdoor activities rather than 'all', so a question about an indoor activity still receives the honest no-match the brief asks for.",
+      "advice_template": "No significant weather hazard right now: {temperature_2m} C, rain {precipitation_probability}%, wind {wind_speed_10m} km/h.\n- No weather-based reason to avoid outdoor plans\n- Normal precautions: water, sun protection, sensible clothing\n- This covers WEATHER only - judge the activity itself on its own merits",
+      "traceable_to_api": "temperature_2m, precipitation_probability, wind_speed_10m, weather_code from /current"
+    },
+    {
+      "id": "SOP-030",
+      "name": "Outdoor Manual Workers - Heat Stress",
+      "category": "vulnerable_groups",
+      "subcategory": "occupational_heat",
+      "match_type": "situational",
+      "applies_to": [
+        "outdoor_workers",
+        "construction_workers",
+        "farmers",
+        "street_vendors",
+        "delivery_workers"
+      ],
+      "description": "Dangerous heat for people working outdoors for hours",
+      "condition": {
+        "any_of": [
+          {
+            "metric": "apparent_temperature",
+            "op": ">=",
+            "value": 40
+          },
+          {
+            "metric": "temperature_2m",
+            "op": ">",
+            "value": 37
+          }
+        ]
+      },
+      "severity": 3,
+      "severity_name": "high",
+      "specificity": 2,
+      "regional_context": "India labour-heat risk: construction, farming, street vending, delivery. Hours of exposure make this far more dangerous than a short walk.",
+      "why_this_sop": "Occupational heat stress causes real illness and deaths each summer; brief-style 'stay hydrated' is not enough for people who cannot simply go indoors.",
+      "advice_template": "Dangerous heat for outdoor work. Feels like {apparent_temperature} C (air {temperature_2m} C).\n- Shift heavy work to before 11 AM or after 4 PM\n- Rest in shade 10 min every hour; water every 15-20 min\n- Watch for cramps, dizziness, nausea, confusion - stop and cool immediately\n- Light, loose, light-coloured clothing; cover the head\n- Employers: rotate tasks, provide shaded rest and water points",
+      "traceable_to_api": "apparent_temperature, temperature_2m from /current"
+    },
+    {
+      "id": "SOP-031",
+      "name": "Delivery / Gig Two-Wheeler Riders - Adverse Weather",
+      "category": "travel",
+      "subcategory": "gig_riders",
+      "match_type": "situational",
+      "applies_to": [
+        "delivery_workers",
+        "gig_workers",
+        "two_wheeler_riders",
+        "motorcyclists"
+      ],
+      "description": "Adverse weather for riders doing many trips on two-wheelers",
+      "condition": {
+        "any_of": [
+          {
+            "metric": "precipitation_probability",
+            "op": ">=",
+            "value": 60
+          },
+          {
+            "metric": "wind_speed_10m",
+            "op": ">=",
+            "value": 30
+          },
+          {
+            "metric": "visibility",
+            "op": "<",
+            "value": 1000
+          },
+          {
+            "metric": "weather_code",
+            "op": "in",
+            "value": [
+              80,
+              81,
+              82,
+              95,
+              96,
+              99
+            ]
+          }
+        ]
+      },
+      "severity": 3,
+      "severity_name": "high",
+      "specificity": 2,
+      "regional_context": "Food/parcel delivery riders (India: very common) are exposed all shift, not one trip - cumulative risk in rain, wind and low visibility is high.",
+      "why_this_sop": "Repeated exposure and time pressure make riders take risks; a written policy lets a platform set safe defaults instead of leaving it to each rider.",
+      "advice_template": "Riding conditions are poor. Now: rain {precipitation_probability}%, wind {wind_speed_10m} km/h, visibility {visibility} m.\n- Slow down; brake earlier - wet roads double stopping distance\n- Rain suit + non-fogging visor; keep phone in a waterproof mount\n- Accept longer ETAs rather than rushing; skip flooded underpasses\n- Take shelter during active thunderstorms/hail\n- Platforms: relax delivery-time targets and surge safely in bad weather",
+      "traceable_to_api": "precipitation_probability, wind_speed_10m, visibility, weather_code from /current"
+    },
+    {
+      "id": "SOP-032",
+      "name": "School Outdoor Activity Suitability",
+      "category": "vulnerable_groups",
+      "subcategory": "school_outdoor",
+      "match_type": "situational",
+      "applies_to": [
+        "schools",
+        "teachers",
+        "students",
+        "parents"
+      ],
+      "description": "Whether outdoor PE/assembly/sports day is suitable for children",
+      "condition": {
+        "any_of": [
+          {
+            "metric": "temperature_2m",
+            "op": ">",
+            "value": 35
+          },
+          {
+            "metric": "uv_index",
+            "op": ">=",
+            "value": 8
+          },
+          {
+            "metric": "precipitation_probability",
+            "op": ">=",
+            "value": 60
+          },
+          {
+            "metric": "visibility",
+            "op": "<",
+            "value": 1500
+          },
+          {
+            "metric": "weather_code",
+            "op": "in",
+            "value": [
+              95,
+              96,
+              99
+            ]
+          }
+        ]
+      },
+      "severity": 2,
+      "severity_name": "medium",
+      "specificity": 2,
+      "regional_context": "Schools deciding on outdoor assembly, PE, or sports day. Children are more heat- and UV-vulnerable than adults.",
+      "why_this_sop": "A clear rule helps a teacher/administrator make a consistent call for a group of children rather than improvising.",
+      "advice_template": "Outdoor school activity needs care. Now: {temperature_2m} C, UV {uv_index}, rain {precipitation_probability}%, visibility {visibility} m.\n- Move assembly/PE indoors or to shade during peak heat/UV\n- Shorten outdoor sessions; mandatory water breaks every 15 min\n- Postpone sports day if a thunderstorm is indicated\n- Ensure hats/sunscreen; watch younger children closely",
+      "traceable_to_api": "temperature_2m, uv_index, precipitation_probability, visibility, weather_code from /current"
     }
   ],
   "metadata": {
-    "version": "2.0",
-    "region": "Bengaluru (Coastal plateau, monsoon-influenced)",
-    "total_sops": 26,
+    "version": "3.0",
+    "total_sops": 32,
     "categories": [
-      "travel",
-      "outdoor_exercise",
-      "vulnerable_groups",
-      "weather_alert",
-      "leisure",
-      "health_wellness",
-      "sports",
       "air_quality",
       "cold_weather",
+      "health_wellness",
+      "leisure",
+      "outdoor_exercise",
+      "sports",
+      "travel",
+      "vulnerable_groups",
+      "weather_alert",
       "winter_travel"
     ],
     "severities": {
       "low": [
         "SOP-010",
-        "SOP-011"
+        "SOP-011",
+        "SOP-029"
       ],
       "medium": [
         "SOP-001",
         "SOP-012",
         "SOP-013",
         "SOP-016",
-        "SOP-017",
         "SOP-018",
         "SOP-019",
         "SOP-020",
         "SOP-021",
-        "SOP-022"
+        "SOP-022",
+        "SOP-028",
+        "SOP-032"
       ],
       "high": [
         "SOP-002",
@@ -821,7 +1177,15 @@
         "SOP-007",
         "SOP-009",
         "SOP-014",
-        "SOP-015"
+        "SOP-015",
+        "SOP-017",
+        "SOP-023",
+        "SOP-024",
+        "SOP-025",
+        "SOP-026",
+        "SOP-027",
+        "SOP-030",
+        "SOP-031"
       ],
       "severe": [
         "SOP-008"
@@ -842,92 +1206,38 @@
         "SOP-018",
         "SOP-019",
         "SOP-020",
-        "SOP-021"
+        "SOP-021",
+        "SOP-024",
+        "SOP-025"
       ],
       "situational": [
         "SOP-003",
         "SOP-007",
         "SOP-008",
+        "SOP-010",
         "SOP-012",
         "SOP-016",
-        "SOP-022"
+        "SOP-022",
+        "SOP-023",
+        "SOP-026",
+        "SOP-027",
+        "SOP-028",
+        "SOP-029",
+        "SOP-030",
+        "SOP-031",
+        "SOP-032"
       ],
       "fuzzy": [
-        "SOP-010",
         "SOP-011"
       ]
     },
-    "regional_scope": {
-      "bengaluru_coastal": [
-        "SOP-001",
-        "SOP-002",
-        "SOP-003",
-        "SOP-007",
-        "SOP-008",
-        "SOP-009",
-        "SOP-010",
-        "SOP-011",
-        "SOP-012",
-        "SOP-016",
-        "SOP-017",
-        "SOP-018",
-        "SOP-019",
-        "SOP-020",
-        "SOP-021",
-        "SOP-022"
-      ],
-      "north_hills_only": [
-        "SOP-013",
-        "SOP-014",
-        "SOP-015"
-      ],
-      "all_india": [
-        "SOP-004",
-        "SOP-005",
-        "SOP-006"
-      ]
-    },
-    "demographic_coverage": {
-      "office_commuters": [
-        "SOP-001",
-        "SOP-002",
-        "SOP-003",
-        "SOP-004"
-      ],
-      "elderly_60_plus": [
-        "SOP-006",
-        "SOP-007",
-        "SOP-022"
-      ],
-      "kids_5_15": [
-        "SOP-007",
-        "SOP-020",
-        "SOP-021"
-      ],
-      "pregnant_women": [
-        "SOP-007",
-        "SOP-022"
-      ],
-      "women_all_ages": [
-        "SOP-011"
-      ],
-      "athletes": [
-        "SOP-004",
-        "SOP-005",
-        "SOP-013",
-        "SOP-017",
-        "SOP-018",
-        "SOP-019"
-      ],
-      "pet_owners": [
-        "SOP-007",
-        "SOP-021"
-      ],
-      "water_sports": [
-        "SOP-018"
-      ]
-    },
-    "note": "All SOPs are independent JSON data. Adding new SOPs requires only JSON edit, no code changes. Each SOP has unique id and is fully traceable. Choose 12-15 SOPs for your implementation based on relevance to your region and demographic focus.",
+    "fuzzy_sops": [
+      "SOP-011"
+    ],
+    "baseline_sops": [
+      "SOP-010",
+      "SOP-029"
+    ],
     "condition_grammar": {
       "leaf": {
         "metric": "str",
@@ -948,8 +1258,10 @@
         "always(bool)",
         "fuzzy(bool)"
       ],
-      "note": "One generic evaluator interprets this. Adding/altering any numeric OR compound SOP is a JSON edit only - no control-flow, weather-fetch, or model-call code is touched."
+      "note": "One generic evaluator interprets this. Adding or altering any numeric or compound SOP is a JSON edit only -- no control-flow, weather-fetch or model-call code is touched."
     },
-    "fetch_contract": "weather.py fetches a fixed BROAD variable set (temperature_2m, apparent_temperature, wind_speed_10m, wind_gusts_10m, precipitation, precipitation_probability, precipitation_sum, snowfall_sum, weather_code, uv_index, relative_humidity_2m, visibility) so new policies over known metrics need zero code change. HONEST BOUNDARY: a policy needing a brand-new metric not in this list is the ONE case that requires adding that metric to the fetch list."
+    "fetch_contract": "utils/weather.py fetches a fixed BROAD variable set (temperature_2m, apparent_temperature, wind_speed_10m, wind_gusts_10m, precipitation, precipitation_probability, precipitation_sum, snowfall_sum, weather_code, uv_index, relative_humidity_2m, visibility) so new policies over known metrics need zero code change. HONEST BOUNDARY: a policy needing a brand-new metric not in this list is the ONE case that requires adding that metric to the fetch list.",
+    "audience_contract": "Each policy's applies_to is read by utils/audience.py. Identity tags (pregnant_women, elderly_60_plus, pet_owners, outdoor_workers ...) fail CLOSED: absent evidence, the policy stays silent. Activity tags (cyclists, drivers ...) fail OPEN: an unstated activity still sees the hazard. Tags 'all', 'all_ages', 'all_activities' are never filtered.",
+    "baseline_contract": "A policy marked baseline:true is a fallback. It is dropped whenever any non-baseline policy fires, and it only speaks for an activity its applies_to covers -- so 'I don't have guidance for that' still means what the brief intends: a question no rule covers."
   }
 }

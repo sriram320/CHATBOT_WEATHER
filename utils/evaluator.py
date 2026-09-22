@@ -17,7 +17,7 @@ new combination of metrics and operators and this file is untouched.
 import json
 from pathlib import Path
 
-SOPS_PATH = Path(__file__).parent.parent / "sops_final_25.json"
+SOPS_PATH = Path(__file__).parent.parent / "sops.json"
 
 _OPS = {
     ">": lambda a, b: a > b,
@@ -42,7 +42,7 @@ _MATCH_FIELDS = (
 def load_sops() -> list[dict]:
     """Read policies fresh from disk on every call.
 
-    Deliberately NOT cached: editing sops_final_25.json takes effect on the
+    Deliberately NOT cached: editing sops.json takes effect on the
     very next question with no restart, which is what makes the "add an Nth
     SOP live" demo work.
     """
